@@ -149,7 +149,49 @@ public class TuitionManagement
 						
 						else if (adminOption == 3)
 						{
+							//Maintain Student account
+							TuitionManagement.viewStudentAcc(accountList);
 							
+							int maintainOption = 0;
+							
+							while (maintainOption != Quit)
+							{
+								TuitionManagement.maintainMenu();
+								maintainOption = Helper.readInt("Enter an Option > ");
+									
+								// Add Student  account
+								if (maintainOption == Add)
+								{
+									Account acc = TuitionManagement.inputAccount();
+									TuitionManagement.addStudent(accountList, acc);
+									TuitionManagement.viewStudentAcc(accountList);
+								}
+								
+								// Update Student  account
+								else if(maintainOption == Update)
+								{
+									TuitionManagement.updateStudent(accountList);
+									TuitionManagement.viewStudentAcc(accountList);
+								}
+								
+								// Delete Student account
+								else if(maintainOption == Delete)
+								{
+									TuitionManagement.deleteStudent(accountList);
+									TuitionManagement.viewStudentAcc(accountList);
+								}
+								
+								// Return to administrator menu
+								else if (maintainOption == Quit)
+								{
+									System.out.println("\nReturn to menu\n");
+								}
+								
+								else
+								{
+									System.out.println("\nInvalid Input!\n");
+								}
+							}
 						}
 						
 						else if (adminOption == 4)
@@ -777,6 +819,192 @@ public class TuitionManagement
 	}
 
 
+	//=========Administrator Option 3: Maintain Student Account (View)
+	private static String retriveAllStudents(ArrayList<Account> accountList)
+			{
+				String output = "";
+				for (int i = 0; i < accountList.size(); i++) 
+				{
+					if((accountList.get(i).getRole()).equalsIgnoreCase("Student") )
+					{
+						String accInfo = accountList.get(i).toString();
+						
+						output += String.format("%-84s\n", accInfo);
+					}
+				}
+				return output;		
+			}
+			
+	private static void viewStudentAcc(ArrayList<Account> accountList)
+		{
+				TuitionManagement.setHeader("Student accounts");
+				
+				String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
+				
+				output += retriveAllStudents(accountList);
+				System.out.println(output);
+		}
+			
+	//========Administrator Option 3: Maintain Student Account (Add)============
+	// add student account (Admin)
+	public static void addStudent(ArrayList<Account> accountList, Account acc)
+			{
+					Account account;
+					boolean duplicate = false;
+					boolean empty = false;
+					
+					
+					// Check for empty fields
+					if((acc.getName()).isEmpty() 
+							|| acc.getUserID() <= 0 
+							|| (acc.getEmail()).isEmpty() 
+							|| acc.getMobileNum() <= 0 
+							|| (acc.getPassword()).isEmpty() )
+					{
+						empty = true;
+					}
+					
+					
+					else
+					{
+						for(int i = 0; i < accountList.size(); i ++)
+						{
+							account = accountList.get(i);
+								
+							if(account.getUserID() == acc.getUserID() 
+									|| (account.getEmail()).equalsIgnoreCase(acc.getEmail()) 
+									|| account.getMobileNum() == acc.getMobileNum())
+							{
+								duplicate = true;
+								break;
+							}
+						}
+					}
+					
+					if(empty == true)
+					{
+						System.out.println("\nPlease fill in all account details.\n");
+					}
+					else if(duplicate == true)
+					{
+						System.out.println("\nUser id, email or mobile number already exist.\n");
+					}
+					else
+					{
+						acc.setRole("Student");
+						accountList.add(acc);
+					}
+				}
+				
+	//=========Administrator Option 3: Maintain Student account (Update)==========
+	public static void updateStudent(ArrayList<Account> accountList)
+				{
+					// Check if account exist
+					boolean studentAccFound = false;
+					
+					int userID = Helper.readInt("Enter student user id for update > ");
+					
+					for (int i = 0; i < accountList.size(); i++)
+					{
+						Account studentAcc = accountList.get(i);
+						
+						if (studentAcc.getUserID() == userID && studentAcc.getRole().equalsIgnoreCase("Student"))
+						{
+							studentAccFound = true;
+							
+			                String name = Helper.readString("Enter student name > ");
+			                String email = Helper.readString("Enter student email > ");
+			                int mobileNum = Helper.readInt("Enter student mobile number > ");
+			                String password = Helper.readString("Enter student password > ");
+			                
+			                // Check for empty fields
+			                // Check for duplicate email and mobile number
+			                boolean empty = false;
+			                boolean duplicate = false;
+			                
+			                if(name.isEmpty() 
+			        				|| email.isEmpty() 
+			        				|| mobileNum <= 0 
+			        				|| password.isEmpty() )
+			        		{
+			        			empty = true;
+			        		}
+			                
+			                else 
+			                {
+				                for (Account existingStudent : accountList)
+				                {
+				                	if (existingStudent != studentAcc) 
+				                	{
+				                         if (existingStudent.getEmail().equalsIgnoreCase(email) 
+				                        		 || existingStudent.getMobileNum() == mobileNum) 
+				                         {
+				                             duplicate = true;
+				                             break;
+				                         }
+				                	}
+				                }
+			                }
+			                
+			                if(empty == true)
+			                {
+			                	System.out.println("\nPlease fill in all account details.\n");
+			                }
+			                // Error message when email or mobile already exist
+			                else if (duplicate == true)
+			                {
+			                    System.out.println("\nEmail or mobile number already exists. Student account not updated.\n");
+			                } 
+			                
+			                // If no duplicate exist
+			                else
+			                {
+			                	studentAcc.setName(name);
+			                	studentAcc.setEmail(email);
+			                	studentAcc.setMobileNum(mobileNum);
+			                	studentAcc.setPassword(password);
+			                	System.out.println("\nStudent account " + studentAcc.getUserID() + " updated.\n");
+			                }
+			                
+			                break;
+						}
+					}
+					
+					// If user id does not exist
+					if(!studentAccFound)
+					{
+						System.out.println("\nStudent account " + userID + " not found.\n");
+					}
+				
+				}
+			
+	//========Administrator Option 3: Maintain Student account (Delete)========
+	public static void deleteStudent(ArrayList<Account> accountList)
+				{
+					// Check if account exist
+					boolean studentAccFound = false;
+					
+					
+					int userID = Helper.readInt("Enter student user id for delete > ");
+					
+					for (int i = 0; i < accountList.size(); i++)
+					{
+						Account studentAcc = accountList.get(i);
+						
+						if (studentAcc.getUserID() == userID && (studentAcc.getRole()).equalsIgnoreCase("Student")) 
+						{
+			                studentAccFound = true;
+			                accountList.remove(i);
+			                System.out.println("\nStudent account with userID " + userID + " has been deleted.\n");
+			                break;
+						}
+					}
+					
+					if(!studentAccFound)
+					{
+						System.out.println("\nStudent account " + userID + " not found.\n");
+					}
+				}
 
 	
 	
