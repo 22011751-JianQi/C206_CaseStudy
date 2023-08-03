@@ -105,7 +105,7 @@ public class TuitionManagement
 						else if (adminOption == 2)
 						{
 							//Maintain teacher account
-							//TuitionManagement.viewTeachAcc(accountList);
+							TuitionManagement.viewTeachAcc(accountList);
 							
 							int maintainOption = 0;
 							
@@ -118,17 +118,20 @@ public class TuitionManagement
 								if (maintainOption == Add)
 								{
 									Account acc = TuitionManagement.inputAccount();
-									
+									TuitionManagement.addTeacher(accountList, acc);
+									TuitionManagement.viewTeachAcc(accountList);
 								}
 								
 								else if(maintainOption == Update)
 								{
-						
+									TuitionManagement.updateTeacher(accountList);
+									TuitionManagement.viewTeachAcc(accountList);
 								}
 								
 								else if(maintainOption == Delete)
 								{
-					
+									TuitionManagement.deleteTeacher(accountList);
+									TuitionManagement.viewTeachAcc(accountList);
 								}
 								
 								// Return to administrator menu
@@ -584,7 +587,197 @@ public class TuitionManagement
 		}
 	}
 	
+	//========Administrator Option 2: Maintain teacher account (View)========
+	private static String retriveAllTeachers (ArrayList<Account> accountList)
+	{
+		String output = "";
+		
+		for (int i = 0; i < accountList.size(); i ++)
+		{
+			if((accountList.get(i).getRole()).equalsIgnoreCase("Teacher") )
+			{
+				String accInfo = accountList.get(i).toString();
+				
+				output += String.format("%-84s\n", accInfo);
+			}
+		}
+		return output;
+	}
 	
+	private static void viewTeachAcc(ArrayList<Account> accountList)
+	{
+		TuitionManagement.setHeader("Teacher accounts");
+		
+		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
+	
+		output += retriveAllTeachers(accountList);
+		System.out.println(output);
+	}
+	
+	
+	//========Administrator Option 2: Maintain teacher account (Add)========
+	public static void addTeacher(ArrayList<Account> accountList, Account acc)
+	{
+		Account account;
+		boolean duplicate = false;
+		boolean empty = false;
+		
+		
+		// Check for empty fields
+		if((acc.getName()).isEmpty() 
+				|| acc.getUserID() <= 0 
+				|| (acc.getEmail()).isEmpty() 
+				|| acc.getMobileNum() <= 0 
+				|| (acc.getPassword()).isEmpty() )
+		{
+			empty = true;
+		}
+		
+		
+		else
+		{
+			for(int i = 0; i < accountList.size(); i ++)
+			{
+				account = accountList.get(i);
+					
+				if(account.getUserID() == acc.getUserID() 
+						|| (account.getEmail()).equalsIgnoreCase(acc.getEmail()) 
+						|| account.getMobileNum() == acc.getMobileNum())
+				{
+					duplicate = true;
+					break;
+				}
+			}
+		}
+		
+		
+		
+		if(empty == true)
+		{
+			System.out.println("\nPlease fill in all account details.\n");
+		}
+		else if(duplicate == true)
+		{
+			System.out.println("\nUser id, email or mobile number already exist.\n");
+		}
+		else
+		{
+			acc.setRole("Teacher");
+			accountList.add(acc);
+		}
+	}
+	
+	//========Administrator Option 2: Maintain teacher account (Update)========
+	public static void updateTeacher(ArrayList<Account> accountList)
+	{
+		// Check if account exist
+		boolean teacherAccFound = false;
+		
+		int userID = Helper.readInt("Enter teacher user id for update > ");
+		
+		for (int i = 0; i < accountList.size(); i++)
+		{
+			Account teacherAcc = accountList.get(i);
+			
+			if (teacherAcc.getUserID() == userID && teacherAcc.getRole().equalsIgnoreCase("Teacher"))
+			{
+				teacherAccFound = true;
+				
+                String name = Helper.readString("Enter teacher name > ");
+                String email = Helper.readString("Enter teacher email > ");
+                int mobileNum = Helper.readInt("Enter teacher mobile number > ");
+                String password = Helper.readString("Enter teacher password > ");
+                
+                // Check for empty fields
+                // Check for duplicate email and mobile number
+                boolean empty = false;
+                boolean duplicate = false;
+                
+                if(name.isEmpty() 
+        				|| email.isEmpty() 
+        				|| mobileNum <= 0 
+        				|| password.isEmpty() )
+        		{
+        			empty = true;
+        		}
+                
+                else 
+                {
+	                for (Account existingTeacher : accountList)
+	                {
+	                	if (existingTeacher != teacherAcc) 
+	                	{
+	                         if (existingTeacher.getEmail().equalsIgnoreCase(email) 
+	                        		 || existingTeacher.getMobileNum() == mobileNum) 
+	                         {
+	                             duplicate = true;
+	                             break;
+	                         }
+	                	}
+	                }
+                }
+                
+                if(empty == true)
+                {
+                	System.out.println("\nPlease fill in all account details.\n");
+                }
+                // Error message when email or mobile already exist
+                else if (duplicate == true)
+                {
+                    System.out.println("\nEmail or mobile number already exists. Teacher account not updated.\n");
+                } 
+                
+                // If no duplicate exist
+                else
+                {
+                	teacherAcc.setName(name);
+                	teacherAcc.setEmail(email);
+                	teacherAcc.setMobileNum(mobileNum);
+                	teacherAcc.setPassword(password);
+                	System.out.println("\nTeacher account " + teacherAcc.getUserID() + " updated.\n");
+                }
+                
+                break;
+			}
+		}
+		
+		// If user id does not exist
+		if(!teacherAccFound)
+		{
+			System.out.println("\nTeacher account " + userID + " not found.\n");
+		}
+	}
+
+	//========Administrator Option 2: Maintain teacher account (Delete)========
+	public static void deleteTeacher(ArrayList<Account> accountList)
+	{
+		// Check if account exist
+		boolean teacherAccFound = false;
+		
+		
+		int userID = Helper.readInt("Enter teacher user id for delete > ");
+		
+		for (int i = 0; i < accountList.size(); i++)
+		{
+			Account teacherAcc = accountList.get(i);
+			
+			if (teacherAcc.getUserID() == userID && (teacherAcc.getRole()).equalsIgnoreCase("Teacher")) 
+			{
+                teacherAccFound = true;
+                accountList.remove(i);
+                System.out.println("\nTeacher account with userID " + userID + " has been deleted.\n");
+                break;
+			}
+		}
+		
+		if(!teacherAccFound)
+		{
+			System.out.println("\nTeacher account " + userID + " not found.\n");
+		}
+	}
+
+
+
 	
 	
 	
