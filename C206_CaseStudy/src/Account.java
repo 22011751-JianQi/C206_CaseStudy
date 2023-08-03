@@ -6,14 +6,16 @@ public class Account
 	private String password;
 	private String email;
 	private int mobileNum;
+	private String role;
 	
-	public Account(String name, int userID, String password, String email, int mobileNum) 
+	public Account(String name, int userID, String password, String email, int mobileNum, String role) 
 	{
 		this.name = name;
 		this.userID = userID;
 		this.password = password;
 		this.email = email;
 		this.mobileNum = mobileNum;
+		this.role = role;
 	}
 
 	public String getName() 
@@ -65,6 +67,15 @@ public class Account
 	{
 		this.mobileNum = mobileNum;
 	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 
 	public boolean validateAcc(int inputUserID, String inputPassword) 
 	{
@@ -74,5 +85,12 @@ public class Account
 		}
 		
 		return false;
+	}
+	
+
+	public String toString() 
+	{
+		String accInfo = String.format("%-10s %-30d %-10s %-10d %-10s", name, userID, email, mobileNum, password);	
+		return accInfo;
 	}
 }

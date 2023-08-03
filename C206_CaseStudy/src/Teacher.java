@@ -2,9 +2,8 @@
 public class Teacher extends Account 
 {
 
-	public Teacher(String name, int userID, String password, String email, int mobileNum) 
+	public Teacher(String name, int userID, String password, String email, int mobileNum, String role) 
 	{
-		super(name, userID, password, email, mobileNum);
-		// TODO Auto-generated constructor stub
+		super(name, userID, password, email, mobileNum, role);
 	}
 }
