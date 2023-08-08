@@ -17,6 +17,10 @@ public class Account
 		this.mobileNum = mobileNum;
 		this.role = role;
 	}
+	
+	public Account(int userID) {
+		this.userID = userID;
+	}
 
 	public String getName() 
 	{
@@ -87,10 +91,15 @@ public class Account
 		return false;
 	}
 	
-
 	public String toString() 
 	{
 		String accInfo = String.format("%-10s %-30d %-10s %-10d %-10s", name, userID, email, mobileNum, password);	
 		return accInfo;
+	}
+	
+	public String display()
+	{
+		String personalInfo = String.format("UserID: %d\nName: %s\nEmail address: %s\nMobile number: %d\nPassword: %s\n", userID, name, email, mobileNum, password);
+		return personalInfo;
 	}
 }

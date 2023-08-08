@@ -1,40 +1,32 @@
 
-public class Course {
-	private String Cid;
-	private String Cname;
+public class Course extends Account{
+	private String cid;
+	private String cname;
 	private String description;
-	private String duration;
+	private double duration;
 	private double cost;
+	private int size;
 	
-	public Course(String id, String name, String description, String duration, double cost) {
-		this.Cid = id;
-		this.Cname = name;
+	public Course(int userID, String cid, String cname, String description, double duration, double cost, int size) {
+		super(userID);
+		this.cid = cid;
+		this.cname = cname;
 		this.description = description;
 		this.duration = duration;
 		this.cost = cost;
-	}
-	
-	public String toString() {
-		String courseInfo = String.format("%-10s %-25s %-40s %-10s %-10.2f",
-				Cid,
-				Cname,
-			    description, 
-			    duration,
-			    cost);
-		
-		return courseInfo;
+		this.size = size;
 	}
 
 	public String getCid() {
-		return Cid;
+		return cid;
 	}
 
 	public String getCname() {
-		return Cname;
+		return cname;
 	}
 
 	public void setCname(String cname) {
-		Cname = cname;
+		this.cname = cname;
 	}
 
 	public double getCost() {
@@ -53,14 +45,31 @@ public class Course {
 		this.description = description;
 	}
 
-	public String getDuration() {
+	public double getDuration() {
 		return duration;
 	}
 	
-	public void setDuration(String duration) {
+	public void setDuration(double duration) {
 		this.duration = duration;
 	}
-	
-	
 
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
+	public String courseDisplay()
+	{
+		String courseInfo = String.format("%-20s %-25s %-40s %-10s %-10.2f",
+				cid,
+				cname,
+			    description, 
+			    duration,
+			    cost);
+		
+		return courseInfo;
+	}
 }
