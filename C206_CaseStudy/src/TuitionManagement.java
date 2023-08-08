@@ -189,9 +189,11 @@ public class TuitionManagement {
 								manageCourseMenu();
 								manageCourse = Helper.readInt("Enter an option > ");
 								if (manageCourse == Add) {
-									Course course = inputCourse();
-									TuitionManagement.addCourse(courseList, course);
-									System.out.println("Course added.");
+									Course course = inputCourse(courseList);
+									if (course != null) {
+										TuitionManagement.addCourse(courseList, course);
+										System.out.println("Course added.");
+									}
 								} else if (manageCourse == Update) {
 									Course Ncourse = inputUpdateCourse(courseList);
 									if (Ncourse != null) {
@@ -894,9 +896,17 @@ public class TuitionManagement {
 	}
 
 	// ========Administrator Option 5: Maintain courses (Add)========
-	public static Course inputCourse() {
+	public static Course inputCourse(ArrayList<Course> courseList) {
 		TuitionManagement.setHeader("ADD COURSE");
 		String id = Helper.readString("Enter course id > ");
+
+		for (Course c : courseList) {
+			if (c.getCid().equalsIgnoreCase(id)) {
+				System.out.println("Course ID " + id + " already exists.");
+				return null;
+			}
+		}
+
 		String name = Helper.readString("Enter course name > ");
 		String description = Helper.readString("Enter description > ");
 		String duration = Helper.readString("Enter duration > ");
