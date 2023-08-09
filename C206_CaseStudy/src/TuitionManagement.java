@@ -1,9 +1,8 @@
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class TuitionManagement {
+public class TuitionManagement 
+{
 	// ========System login menu options========
 	private static final int Login_Option_Quit = 4;
 	private static final int Login_Option_Admin = 1;
@@ -17,21 +16,23 @@ public class TuitionManagement {
 	private static final int Maintain_Stud_Option = 3;
 	private static final int Maintain_Fees_Option = 4;
 	private static final int Maintain_Course_Option = 5;
-	private static final int View_Fees_Collection = 7;
+	private static final int View_Enrollment_Statitic = 6;
+	private static final int View_Fees_Collection =7;
 	private static final int View_Student_Performance = 8;
-
-	// ========Teacher menu options========
-
-	// ========Student menu options========
+	private static final int View_Financial_Statitic = 9;
+	
+	//========Teacher menu options========
+	
+	//========Student menu options========
 	private static final int View_Personal_Information = 1;
-	private static final int Student_Option_Quit = 2;
-
+	private static final int Maintain_Enrollment = 2;
+	private static final int Student_Option_Quit = 3;
+	
 	private static final int View_Personal_Fees = 1;
 	private static final int Update_Personal_Information = 2;
 	private static final int View_Personal_Attendance = 3;
-	private static final int Maintain_Personal_Enrollment = 4;
-	private static final int Retrun_To_Menu1 = 5;
-
+	private static final int Retrun_To_Menu1 = 4;
+	
 	// ========Maintain menu options========
 	private static final int Quit = 4;
 	private static final int Add = 1;
@@ -39,384 +40,567 @@ public class TuitionManagement {
 	private static final int Delete = 3;
 
 	private static final String Course_Pattern = "^[A-Z]\\d{3}$";
+	private static final String UserID_Patter = "";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		ArrayList<Account> accountList = new ArrayList<Account>();
+	    ArrayList<Course> courseList = new ArrayList<Course>();
+	    ArrayList<FeeDetails> feeList = new ArrayList<FeeDetails>();
+	    ArrayList<CourseEnroll> enrollmentList = new ArrayList<CourseEnroll>();
 
+	    initializeData(accountList, courseList, feeList, enrollmentList);
+	    loginLoop(accountList, courseList, feeList, enrollmentList);
+	    System.out.println("\nSee you again\n");
+	}
+	
+	// Method to initialize initial data
+	private static void initializeData(
+	    ArrayList<Account> accountList,
+	    ArrayList<Course> courseList,
+	    ArrayList<FeeDetails> feeList,
+	    ArrayList<CourseEnroll> enrollmentList
+	) 
+	{
 		accountList.add(new Account("Admin1", 11111111, "12345", "Admin1@gmail.com", 11000000, "Admin"));
-
+		
 		accountList.add(new Account("Teacher1", 33333333, "12345", "Teacher1@gmail.com", 12000000, "Teacher"));
 		accountList.add(new Account("Teacher2", 44444444, "12345", "Teacher2@gmail.com", 14000000, "Teacher"));
-
+		
 		accountList.add(new Account("Student1", 55555555, "12345", "Student1@gmail.com", 13000000, "Student"));
-
-		ArrayList<Course> courseList = new ArrayList<Course>();
-
+		accountList.add(new Account("Student2", 66666666, "12345", "Student2@gmail.com", 15000000, "Student"));
+		
+		
+		courseList.add(new Course(33333333,"C003", "Math", "Math is fun.", 5, 330.00, 10));
 		courseList.add(new Course(33333333,"C001", "Secondary 2 English", "Enhance student's English language.", 2.30, 230.00, 30));
 		courseList.add(new Course(44444444, "C002", "Secondary 4 Geography", "Enhance student's Geography.", 4, 260.00, 20));
-
-		ArrayList<FeeDetails> feeList = new ArrayList<FeeDetails>();
-
-		FeeDetails s1 = new FeeDetails(55555555, "Tuition", 2000, "20/10/2023", "Pending");
+		
+		
+		enrollmentList.add(new CourseEnroll(55555555,"C001", "Secondary 2 English", "Enhance student's English language.", 2.30, 230.00, 30));
+		
+		
+		
+		FeeDetails s1 = new FeeDetails(55555555,"Tuition",2000,"20/10/2023", "Pending");
 		feeList.add(s1);
-
-		int loginOption = 0;
-
-		int adminOption = 0;
-
-		int teachOption = 0;
-		int teachOption2 = 0;
-
-		int studOption = 0;
-		int studOption2 = 0;
-
-		int maintainOption = 0;
-
-		// ========Login Menu========
-		while (loginOption != Login_Option_Quit) {
-			loginMenu();
-			loginOption = Helper.readInt("Enter an option > ");
-
-			// ========Administrator Login========
-			if (loginOption == Login_Option_Admin) {
-				// ========Validate administrator credentials========
-				Account adminLoginAcct = validateAdmin(accountList);
-
-				if (adminLoginAcct != null) {
-
-					// ========Administrator menu========
-					while (adminOption != Admin_Option_Quit) {
-						adminMenu();
-						adminOption = Helper.readInt("Enter an option > ");
-
-						// ========Add new Administrator========
-						if (adminOption == Maintain_Admin_Option) {
-							// ========Maintain administrator account========
-							TuitionManagement.viewAdminAcc(accountList);
-
-							while (maintainOption != Quit) {
-								TuitionManagement.maintainMenu();
-								maintainOption = Helper.readInt("Enter an Option > ");
-
-								// ========Add administrator account========
-								if (maintainOption == Add) {
-									Account acc = TuitionManagement.inputAccount();
-									TuitionManagement.addAdmin(accountList, acc);
-									TuitionManagement.viewAdminAcc(accountList);
-								}
-
-								// ========Update administrator account========
-								else if (maintainOption == Update) {
-									TuitionManagement.updateAdmin(accountList);
-									TuitionManagement.viewAdminAcc(accountList);
-								}
-
-								// ========Delete administrator account========
-								else if (maintainOption == Delete) {
-									TuitionManagement.deleteAdmin(accountList);
-									TuitionManagement.viewAdminAcc(accountList);
-								}
-
-								// ========Return to administrator menu========
-								else if (maintainOption == Quit) {
-									System.out.println("\nReturn to menu\n");
-								}
-
-								else {
-									System.out.println("\nInvalid Input!\n");
-								}
-
-							}
-
-						}
-
-						else if (adminOption == Maintain_Teach_Option) {
-							// ========Maintain teacher account========
-							TuitionManagement.viewTeachAcc(accountList);
-
-							while (maintainOption != Quit) {
-								TuitionManagement.maintainMenu();
-								maintainOption = Helper.readInt("Enter an Option > ");
-
-								// ========Add teacher account========
-								if (maintainOption == Add) {
-									Account acc = TuitionManagement.inputAccount();
-									TuitionManagement.addTeacher(accountList, acc);
-									TuitionManagement.viewTeachAcc(accountList);
-								}
-
-								// ========Update teacher account========
-								else if (maintainOption == Update) {
-									TuitionManagement.updateTeacher(accountList);
-									TuitionManagement.viewTeachAcc(accountList);
-								}
-
-								// ========Delete teacher account========
-								else if (maintainOption == Delete) {
-									TuitionManagement.deleteTeacher(accountList);
-									TuitionManagement.viewTeachAcc(accountList);
-								}
-
-								// ========Return to administrator menu========
-								else if (maintainOption == Quit) {
-									System.out.println("\nReturn to menu\n");
-								}
-
-								else {
-									System.out.println("\nInvalid Input!\n");
-								}
-							}
-						}
-
-						else if (adminOption == Maintain_Stud_Option) {
-							// ========Maintain Student account========
-
-							while (maintainOption != Quit) {
-								retrieveAllCourse(courseList);
-								viewAllCourse(courseList);
-								TuitionManagement.maintainMenu();
-								maintainOption = Helper.readInt("Enter an Option > ");
-
-								// ========Add Student account========
-								if (maintainOption == Add) {
-									Account acc = TuitionManagement.inputAccount();
-									TuitionManagement.addStudent(accountList, acc);
-									TuitionManagement.viewStudentAcc(accountList);
-								}
-
-								// ========Update Student account========
-								else if (maintainOption == Update) {
-									TuitionManagement.updateStudent(accountList);
-									TuitionManagement.viewStudentAcc(accountList);
-								}
-
-								// ========Delete Student account========
-								else if (maintainOption == Delete) {
-									TuitionManagement.deleteStudent(accountList);
-									TuitionManagement.viewStudentAcc(accountList);
-								}
-
-								// ========Return to administrator menu========
-								else if (maintainOption == Quit) {
-									System.out.println("\nReturn to menu\n");
-								}
-
-								else {
-									System.out.println("\nInvalid Input!\n");
-								}
-							}
-						}
-
-						else if (adminOption == Maintain_Fees_Option) {
-							viewAllFee(feeList);
-
-							while (maintainOption != Quit) {
-								feeMenu();
-								maintainOption = Helper.readInt("Enter an Option > ");
-
-								// ========Add Fee========
-								if (maintainOption == Add) {
-
-								}
-
-								// ========Update Fee========
-								else if (maintainOption == Update) {
-
-								}
-
-								// DeleteFee
-								else if (maintainOption == Delete) {
-
-								}
-							}
-
-						}
-
-						// ========Maintain course========
-						else if (adminOption == Maintain_Course_Option) {
-							// Maintain course (Option 5)
-							// Kow Xing Rong
-
-							while (maintainOption != Quit) {
-								viewAllCourse(courseList);
-								maintainCourseMenu();
-								maintainOption = Helper.readInt("Enter an option > ");
-
-								// ========Add course========
-								if (maintainOption == Add) {
-									Course newCourse = inputCourse(courseList);
-									if (newCourse != null) {
-										addCourse(accountList, courseList, newCourse);
-										
-									}
-								}
-
-								// ========Update course========
-								else if (maintainOption == Update) {
-									Course Ncourse = inputUpdateCourse(courseList);
-									if (Ncourse != null) {
-										updateCourse(accountList, courseList, Ncourse);
-										System.out.println("Course updated.");
-									}
-								}
-
-								// ========Delete course========
-								else if (maintainOption == Delete) {
-									TuitionManagement.setHeader("DELETE COURSE");
-									String courseId = Helper.readString("Enter course id to delete course > ");
-									deleteCourse(courseList, courseId);
-
-								}
-
-								else if (maintainOption == Quit) {
-									System.out.println("\nReturn to menu\n");
-
-								} else {
-									System.out.println("Invalid option");
-								}
-							}
-						}
-
-						// ========View fees collection========
-						else if (adminOption == View_Fees_Collection) {
-
-						}
-
-						// ========View student performance========
-						else if (adminOption == View_Student_Performance) {
-
-						}
-
-						else if (adminOption == 9) {
-
-						}
-
-						else if (adminOption == Admin_Option_Quit) {
-							System.out.println("\nReturn to login\n");
-						} else {
-							System.out.println("\nInvalid option!\n");
-						}
-					}
-				}
-			}
-
-			// ========Teacher login========
-			else if (loginOption == Login_Option_Teacher) {
-				// Validate teacher credentials
-				Account teachLoginAcct = validateTeacher(accountList);
-
-				if (teachLoginAcct != null) {
-
-					// ========Teacher menu========
-					while (teachOption != 3) {
-						teacherMenu();
-						teachOption = Helper.readInt("Enter an option > ");
-
-						// ========View personal info========
-						if (teachOption == 1) {
-							viewInfo(teachLoginAcct);
-
-							while (teachOption2 != 2) {
-								teacherMenu2();
-								teachOption2 = Helper.readInt("Enter an Option > ");
-
-								// ========Update personal information========
-								if (teachOption2 == 1) {
-									updatePersonal(accountList, teachLoginAcct);
-									viewInfo(teachLoginAcct);
-								}
-
-								else if (teachOption2 == 2) {
-									System.out.println("\nReturn to Menu\n");
-								} else {
-									System.out.println("\nInvalid option!\n");
-								}
-							}
-						}
-
-						//========View assigned course========
-						else if (teachOption == 2)
-						{
-							viewAssignedCourse(courseList, teachLoginAcct);
-						}
-
-						else if (teachOption == 3) {
-							System.out.println("\nReturn to login\n");
-						} else {
-							System.out.println("\nInvalid option!\n");
-						}
-					}
-				}
-			}
-
-			// ========Student login========
-			else if (loginOption == Login_Option_Student) {
-				// Validate student credentials
-				Account studLoginAcct = validateStudent(accountList);
-
-				if (studLoginAcct != null) {
-
-					// ========student menu========
-					while (studOption != 2) {
-						studentMenu();
-						studOption = Helper.readInt("Enter an option > ");
-
-						// ========View personal information
-						if (studOption == 1) {
-							TuitionManagement.viewInfo(studLoginAcct);
-
-							while (studOption2 != Retrun_To_Menu1) {
-								studentMenu2();
-								studOption2 = Helper.readInt("Enter an Option > ");
-
-								// ========View personal fees========
-								if (studOption2 == View_Personal_Fees) {
-									viewPersonalFees(feeList, studLoginAcct);
-								}
-
-								// ========Update personal information========
-								else if (studOption2 == Update_Personal_Information) {
-
-									updatePersonal(accountList, studLoginAcct);
-									viewInfo(studLoginAcct);
-								}
-
-								else if (studOption2 == View_Personal_Attendance) {
-
-								}
-
-								else if (studOption2 == Maintain_Personal_Enrollment) {
-
-								}
-
-								else if (studOption2 == Retrun_To_Menu1) {
-									System.out.println("\nReturn to Menu\n");
-								}
-
-								else {
-									System.out.println("\nInvalid option!\n");
-								}
-							}
-						}
-
-						else if (studOption == 2) {
-							System.out.println("\nReturn to login\n");
-						} else {
-							System.out.println("\nInvalid option!\n");
-						}
-					}
-				}
-			}
-
-			else if (loginOption == Login_Option_Quit) {
-				System.out.println("\nSee you again\n");
-			} else {
-				System.out.println("\nInvalid option!\n");
+	}
+	
+	// Method to handle the main login loop
+	private static void loginLoop(
+	    ArrayList<Account> accountList,
+	    ArrayList<Course> courseList,
+	    ArrayList<FeeDetails> feeList,
+	    ArrayList<CourseEnroll> enrollmentList
+	) {
+	    int loginOption = 0;
+
+	    while (loginOption != Login_Option_Quit) 
+	    {
+	        loginMenu();
+	        loginOption = Helper.readInt("Enter an option > ");
+	        
+	        //Login as Administrator
+	        if (loginOption == Login_Option_Admin) 
+	        {
+	            handleAdminLogin(accountList, courseList, feeList, enrollmentList);
+	        } 
+	        
+	        //Login as Teacher
+	        else if (loginOption == 2) 
+	        {
+	            handleTeacherLogin(accountList, courseList);
+	        } 
+	        
+	        //Login as Student
+	        else if (loginOption == Login_Option_Student) 
+	        {
+	            handleStudentLogin(accountList, courseList, feeList, enrollmentList);
+	        } 
+	        
+	        else if (loginOption == Login_Option_Quit) 
+	        {
+	            // No need to do anything, the loop will exit
+	        } else {
+	            System.out.println("\nInvalid option!\n");
+	        }
+	    }
+	}
+
+	//========Method to handle administrator login========
+	private static void handleAdminLogin
+	(
+	    ArrayList<Account> accountList,
+	    ArrayList<Course> courseList,
+	    ArrayList<FeeDetails> feeList,
+	    ArrayList<CourseEnroll> enrollmentList
+	) 
+	{
+		Account adminLoginAcct = validateAdmin(accountList);
+
+	    if (adminLoginAcct != null) 
+	    {
+	        // Administrator menu loop
+	        int adminOption = 0;
+
+	        while (adminOption != Admin_Option_Quit) {
+	            adminMenu();
+	            adminOption = Helper.readInt("Enter an option > ");
+
+	            switch (adminOption) 
+	            {
+	            	//Option 1
+	                case Maintain_Admin_Option:
+	                    handleAdminMaintenance(accountList);
+	                    break;
+	                   
+	                //Option 2
+	                case Maintain_Teach_Option:
+	                    handleTeacherMaintenance(accountList);
+	                    break;
+	                
+	                //Option 3
+	                case Maintain_Stud_Option:
+	                    handleStudentMaintenance(accountList);
+	                    break;
+	                
+	                //Option 4
+	                case Maintain_Fees_Option:
+	                    handleFeesMaintenance(feeList);
+	                    break;
+	                
+	                //Option 5    
+	                case Maintain_Course_Option:
+	                    handleCourseMaintenance(accountList, courseList);
+	                    break;
+	                   
+	                case View_Enrollment_Statitic:
+	                	//
+	                	break;
+	                 
+	                //Option 7    
+	                case View_Fees_Collection:
+	                   // viewFeesCollection(feeList);
+	                    break;
+	                 
+	                //Option 8   
+	                case View_Student_Performance:
+	                   // viewStudentPerformance(enrollmentList);
+	                    break;
+	                
+	                //Option 9
+	                case View_Financial_Statitic:
+	                	//
+	                	break;
+	                
+	                //Option 10	
+	                case Admin_Option_Quit:
+	                    System.out.println("\nReturn to login\n");
+	                    break;
+	                default:
+	                    System.out.println("\nInvalid option!\n");
+	            }
+	        }
+	    }
+	    
+	    else {
+            System.out.println("\nInvalid administrator credentials.\n");
+        }
+	    
+	    
+	}
+	
+	// ========Handle administrator functions========
+	//Option 1
+	public static void handleAdminMaintenance(ArrayList<Account> accountList)
+	{
+		boolean isRunning = true;
+		
+		while(isRunning)
+		{
+			viewAdminAcc(accountList);
+			maintainMenu();
+			int maintainOption = Helper.readInt("Enter an Option > ");
+			
+			switch (maintainOption) 
+			{
+            case 1:
+                Account newAdmin = inputAccount();
+                addAdmin(accountList, newAdmin);
+                break;
+            case 2:
+                updateAdmin(accountList);
+                break;
+            case 3:
+                deleteAdmin(accountList);
+                break;
+            case 4:
+                isRunning = false;
+                System.out.println("\nReturn to login menu.\n");
+                break;
+            default:
+                System.out.println("\nInvalid choice. Please choose a valid option.\n");
+                break;
 			}
 		}
 	}
+	
+	//Option 2
+	public static void handleTeacherMaintenance(ArrayList<Account> accountList) 
+	{
+	    boolean isRunning = true;
 
-	public static void setHeader(String header) {
+	    while (isRunning) {
+	        viewTeachAcc(accountList);
+	        maintainMenu();
+	        int maintainOption = Helper.readInt("Enter an Option > ");
+
+	        switch (maintainOption) 
+	        {
+	            case 1:
+	                Account newTeacher = inputAccount();
+	                addTeacher(accountList, newTeacher);
+	                break;
+	            case 2:
+	                updateTeacher(accountList);
+	                break;
+	            case 3:
+	                deleteTeacher(accountList);
+	                break;
+	            case 4:
+	                isRunning = false;
+	                System.out.println("\nReturn to login menu.\n");
+	                break;
+	            default:
+	                System.out.println("\nInvalid choice. Please choose a valid option.\n");
+	                break;
+	        }
+	    }
+	}
+
+	//Option 3
+	public static void handleStudentMaintenance(ArrayList<Account> accountList) 
+	{
+	    boolean isRunning = true;
+
+	    while (isRunning) 
+	    {
+	        viewStudentAcc(accountList);
+	        int maintainOption = Helper.readInt("Enter your choice: ");
+
+	        switch (maintainOption) 
+	        {
+	            case 1:
+	                Account newStudent = inputAccount();
+	                addStudent(accountList, newStudent);
+	                break;
+	            case 2:
+	                updateStudent(accountList);
+	                break;
+	            case 3:
+	                deleteStudent(accountList);
+	                break;
+	            case 4:
+	                isRunning = false;
+	                System.out.println("\nReturn to login menu.\n");
+	                break;
+	            default:
+	                System.out.println("Invalid choice. Please choose a valid option.");
+	                break;
+	        }
+	    }
+	  }
+
+	//Option 4
+	public static void handleFeesMaintenance(ArrayList<FeeDetails> feeList) 
+	{
+	    boolean isRunning = true;
+
+	    while (isRunning) 
+	    {
+	    	viewAllFee(feeList);
+	    	feeMenu();
+	        int maintainOption = Helper.readInt("Enter your choice > ");
+
+	        switch (maintainOption) 
+	        {
+	            case 1:
+	                FeeDetails newFee = inputFee();
+	                createFee(feeList, newFee);
+	                break;
+	            case 2:
+	                updateFees(feeList);
+	                break;
+	            case 3:
+	                deleteFee(feeList);
+	                break;
+	            case 4:
+	                isRunning = false;
+	                System.out.println("\nReturn to login menu.\n");
+	                break;
+	            default:
+	                System.out.println("\nInvalid choice. Please choose a valid option.\n");
+	                break;
+	        }
+	    }
+	}
+	
+	//Option 5
+	public static void handleCourseMaintenance(ArrayList<Account> accountList, ArrayList<Course> courseList) 
+	{
+	    boolean isRunning = true;
+
+	    while (isRunning) 
+	    {
+	    	viewAllCourse(courseList);
+	    	maintainCourseMenu();
+	    	int maintainOption = Helper.readInt("Enter your choice > ");
+
+	        switch (maintainOption) 
+	        {
+	            case 1:
+	                Course newCourse = inputCourse(courseList);
+	                if (newCourse != null) 
+	                {
+	                    addCourse(accountList, courseList, newCourse);
+	                }
+	                break;
+	            case 2:
+	                Course updatedCourse = inputUpdateCourse(courseList);
+	                if (updatedCourse != null) {
+	                    updateCourse(accountList, courseList, updatedCourse);
+	                }
+	                break;
+	            case 3:
+	                String courseIdToDelete = Helper.readString("Enter course ID to delete >  ");
+	                deleteCourse(courseList, courseIdToDelete);
+	                break;
+	            case 4:
+	                isRunning = false;
+	                System.out.println("\nReturn to login menu.\n");
+	                break;
+	            default:
+	                System.out.println("\nInvalid choice. Please choose a valid option.\n");
+	                break;
+	        }
+	    }
+	}	
+	
+	//Option 6
+	
+	//Option 7
+	
+	//Option 8
+	
+	//Option 9
+	
+	//========Method to handle teacher login========
+	private static void handleTeacherLogin(ArrayList<Account> accountList, ArrayList<Course> courseList) {
+	    int teachOption = 0;
+	    Account teacherLoginAcct = validateTeacher(accountList);
+
+	        if (teacherLoginAcct != null) 
+	        {
+	            teachOption = 0; // Reset teachOption for the teacher menu
+	            while (teachOption != 3) {
+	                teacherMenu();
+	                teachOption = Helper.readInt("Enter an option > ");
+
+	                switch (teachOption) 
+	                {
+	                	//Option 1
+	                	//Go to handleTeacherUpdate method
+	                    case 1:
+	                        handleTeacherUpdate(accountList, teacherLoginAcct); // Call a separate method to handle teacher info
+	                        break;
+	                        
+	                    //Option 2
+	                    case 2:
+	                        viewAssignedCourse(courseList, teacherLoginAcct);
+	                        //Maintain attendance method
+	                        break;
+	                    case 3:
+	                        System.out.println("\nReturn to login\n");
+	                        break;
+	                    default:
+	                        System.out.println("\nInvalid option!\n");
+	                        break;
+	                }
+	            }
+	        } else {
+	            System.out.println("\nInvalid teacher credentials.\n");
+	        }
+	    
+	}
+	
+	//========Handle teacher functions========
+	//Under option 1: view personal information
+	//Update teacher information
+	private static void handleTeacherUpdate(ArrayList<Account> accountList, Account teacherLoginAcct) 
+	{
+		boolean isRunning = true;
+		
+		while(isRunning)
+		{
+			int teachOption2 = 0;
+		    while (teachOption2 != 2) 
+		    {
+		        teacherMenu2();
+		        teachOption2 = Helper.readInt("Enter an Option > ");
+	
+		        switch (teachOption2) 
+		        {
+		            case 1:
+		                updatePersonal(accountList, teacherLoginAcct);
+		                viewInfo(teacherLoginAcct);
+		                break;
+		            case 2:
+		            	isRunning = false;
+		                System.out.println("\nReturn to Menu\n");
+		                break;
+		            default:
+		                System.out.println("\nInvalid option!\n");
+		                break;
+		        }
+		    }
+		}
+	}
+
+
+	//========Method to handle student login========
+	private static void handleStudentLogin(ArrayList<Account> accountList, ArrayList<Course> courseList, ArrayList<FeeDetails> feeList, ArrayList<CourseEnroll> enrollmentList) {
+	    int studentOption = 0;
+
+	     Account studentLoginAcct = validateStudent(accountList);
+
+	        if (studentLoginAcct != null) 
+	        {
+	            while (studentOption != 3) 
+	            {
+	                studentMenu();
+	                studentOption = Helper.readInt("Enter an option > ");
+
+	                switch (studentOption)
+	                {
+	                	// Option 1
+	                	// View personal Info
+	                	// Student menu 2
+	                    case 1:
+	                        viewInfo(studentLoginAcct);
+	                        handleStudentInfo(accountList, feeList, studentLoginAcct);
+	                        break;
+	                        
+	                    //Option 2
+	                    // View enrollment
+	                    case 2:
+	                        handleStudentEnrollment(courseList, enrollmentList, studentLoginAcct);
+	                        break;
+	                    case 3:
+	                        System.out.println("\nReturn to login\n");
+	                        break;
+	                    default:
+	                        System.out.println("\nInvalid option!\n");
+	                        break;
+	                }
+	            }
+	        } else {
+	            System.out.println("\nInvalid student credentials.\n");
+	        }
+	    
+	}
+	
+	//========Handle student functions========
+	//Under Option 1
+	//
+	private static void handleStudentInfo(ArrayList<Account> accountList, ArrayList<FeeDetails> feesList, Account studentLoginAcct) {
+		boolean isRunning = true;
+		
+		while(isRunning)
+		{
+			int infoUpdateOption = 0;
+		    while (infoUpdateOption != 4) 
+		    {
+		        studentMenu2();
+		        infoUpdateOption = Helper.readInt("Enter an Option > ");
+	
+		        switch (infoUpdateOption) 
+		        {
+		        	// Option 1
+		        	// View personal fees
+		            case 1:
+		                viewPersonalFees(feesList, studentLoginAcct);
+		                break;
+		            
+		            //Option 2
+		            // Update personal info
+		            case 2:
+		                updatePersonal(accountList, studentLoginAcct);
+		                viewInfo(studentLoginAcct);
+		                break;
+		            
+		            //Option 3
+		            //View attendance
+		            case 3:
+		                // Implement viewing attendance if needed
+		                break;
+		                
+		            case 4:
+		            	isRunning = false;
+		                System.out.println("\nReturn to student menu\n");
+		                break;
+		            default:
+		                System.out.println("\nInvalid option!\n");
+		                break;
+		        }
+		    }
+		}
+	}
+	
+	//Option 2
+	private static void handleStudentEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account studentLoginAcct) {
+		boolean isRunning = true;
+		
+		while(isRunning)
+		{
+			int enrollmentOption = 0;
+		    while (enrollmentOption != 4) {
+		        maintainEnrollmentMenu();
+		        enrollmentOption = Helper.readInt("Enter an option > ");
+	
+		        switch (enrollmentOption) 
+		        {
+		        	//Option 1
+		        	// Add enrollment
+		            case 1:
+		                addEnrollment(courseList, enrollmentList, studentLoginAcct);
+		                break;
+		            
+		            //Option 2
+		            // Update enrollment
+		            case 2:
+		                updateEnrollment(courseList, enrollmentList, studentLoginAcct);
+		                break;
+		            
+		            //Option 3
+		            // Delete enrollment
+		            case 3:
+		                deleteEnrollment(enrollmentList, studentLoginAcct);
+		                break;
+		              
+		            case 4:
+		            	isRunning = false;
+		                System.out.println("\nReturn to student menu\n");
+		                break;
+		            default:
+		                System.out.println("\nInvalid option!\n");
+		                break;
+		        }
+		    }
+		}
+	}
+	
+	
+	
+	public static void setHeader(String header) 
+	{
 		Helper.line(80, "=");
 		System.out.println(header);
 		Helper.line(80, "=");
@@ -440,15 +624,17 @@ public class TuitionManagement {
 		System.out.println("3. Maintain student account");
 		System.out.println("4. Manage studet fees");
 		System.out.println("5. Maintain courses");
-		System.out.println("6. View enrolment statistics");
-		System.out.println("7. View fees collection");
-		System.out.println("8. View student performance");
-		System.out.println("9. View financial statistics");
+		System.out.println("6. View enrolment statistics (Not done)");
+		System.out.println("7. View fees collection (Not done)");
+		System.out.println("8. View student performance (Not done)");
+		System.out.println("9. View financial statistics (Not doen)");
 		System.out.println("10. Return");
 		Helper.line(80, "-");
 	}
 
-	// ========Teacher Menu========
+	
+	 
+	//========Teacher Menu========
 	public static void teacherMenu() {
 		TuitionManagement.setHeader("Teacher Menu");
 		System.out.println("1. View personal information");
@@ -457,31 +643,38 @@ public class TuitionManagement {
 		Helper.line(80, "-");
 	}
 
-	public static void teacherMenu2() {
+	//========Teacher Menu 2: Under option 1========
+	public static void teacherMenu2()
+	{
 		TuitionManagement.setHeader("Teacher Menu");
 		System.out.println("1. Update personal information");
 		System.out.println("2. Return");
 	}
-
+	
+	
+	
 	// ========Student Menu========
 	public static void studentMenu() {
 		TuitionManagement.setHeader("Student Menu");
 		System.out.println("1. View personal information");
-		System.out.println("2. Return");
+		System.out.println("2. Maintain enrollment");
+		System.out.println("3. Return");
 		Helper.line(80, "-");
 	}
 
-	// ========Student Menu 2========
-	public static void studentMenu2() {
+	//========Student Menu 2: under option 1========
+	public static void studentMenu2() 
+	{
 		TuitionManagement.setHeader("Student Menu");
 		System.out.println("1. View fees");
 		System.out.println("2. Update personal information");
 		System.out.println("3. View attendance");
-		System.out.println("4. Maintain enrollment");
-		System.out.println("5. Return to menu");
+		System.out.println("4. Return to menu");
 		Helper.line(80, "-");
 	}
-
+	
+	
+	
 	// ========Maintain account menu========
 	public static void maintainMenu() {
 		TuitionManagement.setHeader("Maintain options");
@@ -491,7 +684,7 @@ public class TuitionManagement {
 		System.out.println("4. Return to menu");
 		Helper.line(80, "-");
 	}
-
+	
 	// ========Maintain course menu========
 	public static void maintainCourseMenu() {
 		TuitionManagement.setHeader("Maintain courses");
@@ -501,23 +694,28 @@ public class TuitionManagement {
 		System.out.println("4. Return to menu");
 	}
 
-	// ========Maintain fee menu========
-	public static void feeMenu() {
+	//========Maintain fee menu========
+	public static void feeMenu() 
+	{
 		setHeader("Maintain fees");
 		System.out.println("1. Add Fee");
 		System.out.println("2. Update Fee");
 		System.out.println("3. Delete Fee From Student");
 		System.out.println("4. Quit");
 	}
-
-	public static void maintainErollmentMenu() {
+	
+	//========Maintain enrollment========
+	public static void maintainEnrollmentMenu() 
+	{
 		setHeader("Enrollment menu");
 		System.out.println("1. Add enrollment");
 		System.out.println("2. Update enrollment");
 		System.out.println("3. Delete enrollment");
 		System.out.println("4. Quit");
 	}
-
+	
+	
+	
 	// ========Administrator login validation========
 	private static Account validateAdmin(ArrayList<Account> accountList) {
 
@@ -531,8 +729,6 @@ public class TuitionManagement {
 				return acc;
 			}
 		}
-
-		System.out.println("\nIncorrect user ID or password\n");
 		return null;
 	}
 
@@ -548,8 +744,6 @@ public class TuitionManagement {
 				return acc;
 			}
 		}
-
-		System.out.println("\nIncorrect user ID or password\n");
 		return null;
 	}
 
@@ -559,34 +753,36 @@ public class TuitionManagement {
 		String inputPassword = Helper.readString("Enter Student password > ");
 
 		for (Account acc : accountList) {
-			if (acc.validateAcc(inputUserID, inputPassword)) {
+			if (acc.getRole().equalsIgnoreCase("Student") && acc.validateAcc(inputUserID, inputPassword)) {
 				// Store student account
 				System.out.println("\nLogin successful.\n");
 				return acc;
 			}
 		}
-
-		System.out.println("Incorrect user ID or password\n");
 		return null;
 	}
 
-	// ========Display personal info (student/teacher)========
-	private static void viewInfo(Account acc) {
+	
+	
+	//========Display personal info (student/teacher)========
+	private static void viewInfo(Account acc)
+	{
 		setHeader("Personal Information");
-
+		
 		String output = acc.display();
 		System.out.println(output);
 	}
-
-	// ========Update personal info (student/teacher)========
-	private static void updatePersonal(ArrayList<Account> accountList, Account acc) {
+	
+	//========Update personal info (student/teacher)========
+	private static void updatePersonal(ArrayList<Account> accountList, Account acc)
+	{
 		setHeader("Update Personal Information");
-
+		
 		String name = Helper.readString("Enter new name > ");
 		String email = Helper.readString("Enter new email > ");
 		int mobileNum = Helper.readInt("Enter new mobile number > ");
 		String password = Helper.readString("Enter new password > ");
-
+		
 		// Check for empty fields
 		// Check for duplicate email and mobile number
 		boolean empty = false;
@@ -599,7 +795,8 @@ public class TuitionManagement {
 		else {
 			for (Account existingAcc : accountList) {
 				if (existingAcc != acc) {
-					if (existingAcc.getEmail().equalsIgnoreCase(email) || existingAcc.getMobileNum() == mobileNum) {
+					if (existingAcc.getEmail().equalsIgnoreCase(email)
+							|| existingAcc.getMobileNum() == mobileNum) {
 						duplicate = true;
 						break;
 					}
@@ -624,9 +821,16 @@ public class TuitionManagement {
 			System.out.println("\nAccount " + acc.getUserID() + " updated.\n");
 		}
 	}
+	
 
-	// ========Administrator functions========
 
+
+	
+	
+	
+	
+	
+	
 	// ========Maintain account input========
 	public static Account inputAccount() {
 		String name = Helper.readString("Enter account name > ");
@@ -693,6 +897,7 @@ public class TuitionManagement {
 		} else {
 			acc.setRole("Admin");
 			accountList.add(acc);
+			System.out.println("\nUser account " + acc.getUserID() + " successfully created.");
 		}
 
 	}
@@ -786,6 +991,8 @@ public class TuitionManagement {
 		}
 	}
 
+	
+	
 	// ========Administrator Option 2: Maintain teacher account (View)========
 	private static String retriveAllTeachers(ArrayList<Account> accountList) {
 		String output = "";
@@ -932,6 +1139,8 @@ public class TuitionManagement {
 		}
 	}
 
+	
+	
 	// =========Administrator Option 3: Maintain Student Account (View)
 	private static String retriveAllStudents(ArrayList<Account> accountList) {
 		String output = "";
@@ -1078,32 +1287,118 @@ public class TuitionManagement {
 		}
 	}
 
-	// ========Administrator Option 4: Maintain Fees (View)========
-	public static String retrieveAllFees(ArrayList<FeeDetails> feeList) {
+	
+	
+	//========Administrator Option 4: Maintain Fees (View)========
+	public static String retrieveAllFees(ArrayList<FeeDetails> feeList) 
+	{
 		String output = "";
-		for (int j = 0; j < feeList.size(); j++) {
+		for(int j=0; j < feeList.size();j++) 
+		{
 			String feeInfo = feeList.get(j).feeString();
-
-			output += String.format("%-15d %-69s\n", feeList.get(j).getUserID(), feeInfo);
+			
+			output += String.format("%-15d %-69s\n", feeList.get(j).getUserID(), feeInfo);			
 		}
 		return output;
 	}
 
 	public static void viewAllFee(ArrayList<FeeDetails> feeList) {
 		setHeader("ALL FEE");
-		String output = String.format("%-15s %-20s %-15s %-15s %-20s\n", "ID", "FEE TYPES", "AMOUNT", "DUE DATE",
-				"PAYMENT STATUS");
+		String output = String.format("%-15s %-20s %-15s %-15s %-20s\n","ID","FEE TYPES","AMOUNT","DUE DATE","PAYMENT STATUS");
 		output += retrieveAllFees(feeList);
 		System.out.println(output);
 	}
+	
+	//========Administrator Option 4: Maintain Fees (Add - Do after enrollment)========
+	public static FeeDetails inputFee() {
+		int id = Helper.readInt("Enter the student ID: ");
+		String type = Helper.readString("Enter the fee type (Tuition/Exam/Others) : ");
+		double price = Helper.readDouble("Enter the fee amount: ");
+		String duedate = Helper.readString("Enter the fee due date (dd/mm/yyyy): ");
+		String status = Helper.readString("Enter the payment status (Pending/Paid): ");
+		FeeDetails newfee = new FeeDetails(id,type,price,duedate,status);
+		return newfee;
+		
+	}
+	
+	public static void createFee(ArrayList<FeeDetails> feeList, FeeDetails newfee) {
+		
+		for(int i = 0; i < feeList.size(); i++) {
+			if (feeList.get(i).getUserID()==newfee.getUserID() &&
+					feeList.get(i).getDueDate().equalsIgnoreCase(newfee.getDueDate())&&
+					feeList.get(i).getType().equalsIgnoreCase(newfee.getType()))
+				return;
+		}
 
-	// ========Administrator Option 4: Maintain Fees (Add - Do after
-	// enrollment)========
+		if(newfee.getType().isEmpty()) {
+			return;
+		}
+		feeList.add(newfee);
+	}
 
-	// ========Administrator Option 4: Maintain Fees (Update)========
+	//========Administrator Option 4: Maintain Fees (Update)========
+	public static boolean doUpdateFees(ArrayList<FeeDetails> feeList, int id, String type, double price, String dueDate, String paymentStatus) {
+		boolean isUpdated = false;
+		
+		if(type.isEmpty()||dueDate.isEmpty()||paymentStatus.isEmpty()) 
+			return false;
+		
+		for (int i = 0; i < feeList.size();i++) {
+			if(id == feeList.get(i).getUserID() && type.equalsIgnoreCase(feeList.get(i).getType()) && dueDate.equalsIgnoreCase(dueDate)) {
+				feeList.get(i).setType(type);
+				feeList.get(i).setPrice(price);
+				feeList.get(i).setDueDate(dueDate);
+				feeList.get(i).setPaymentStatus(paymentStatus);
+				isUpdated = true;
+			}
+		}
+		return isUpdated;
+	}
+	
+	public static void updateFees(ArrayList<FeeDetails> feeList) {
+		int id = Helper.readInt("Enter the student ID: ");
+		String type = Helper.readString("Enter the fee type (Tuition/Exam/Others) : ");
+		double price = Helper.readDouble("Enter the fee amount: ");
+		String duedate = Helper.readString("Enter the fee due date (dd/mm/yyyy): ");
+		String status = Helper.readString("Enter the payment status (Pending/Paid): ");
+		Boolean isUpdated = doUpdateFees(feeList,id,type,price,duedate,status);
+		if (!isUpdated) {
+			System.out.println("Invalid input");
+		} else {
+			System.out.println("Updated Successfully");
+		}
+	}
 
-	// ========Administrator Option 4: Maintain Fees (Delete)========
+	//========Administrator Option 4: Maintain Fees (Delete)========
+	public static boolean doDeleteFee(ArrayList<FeeDetails> feeList,FeeDetails newFee) {
+		boolean isDeleted = false;
+		for (int i = 0 ; i < feeList.size(); i++) {
+			if(feeList.get(i).getUserID()== newFee.getUserID() && feeList.get(i).getType().equalsIgnoreCase(newFee.getType())) {
+				feeList.remove(i);
+				isDeleted = true;
+				break;
+			}
+		}
+		return isDeleted;
+	}
+	
+	public static void deleteFee(ArrayList<FeeDetails> feeList) {
+		int id = Helper.readInt("Enter the student ID: ");
+		String type = Helper.readString("Enter the fee type (Tuition/Exam/Others) : ");
+		double price = Helper.readDouble("Enter the fee amount: ");
+		String duedate = Helper.readString("Enter the fee due date (dd/mm/yyyy): ");
+		String status = Helper.readString("Enter the payment status (Pending/Paid): ");
+		FeeDetails newFee = new FeeDetails(id,type,price,duedate,status);
+		Boolean isDeleted = doDeleteFee(feeList,newFee);
+		if (!isDeleted) {
+			System.out.println("Invalid input");
+		} else {
+			System.out.println("Deleted Successfully");
+		}
+	}
 
+	
+	
 	// ========Administrator Option 5: Maintain course (View)========
 	public static String retrieveAllCourse(ArrayList<Course> courseList) {
 		String output = "";
@@ -1269,67 +1564,280 @@ public class TuitionManagement {
 		System.out.println("Course ID " + courseId + " not found.");
 	}
 
-	// ========Teacher Functions========
-
-	// ========Teacher Option 1: View Personal information========
-
+	
+	
+	//========Teacher Functions========
+	
+	
+	
 	//========Teacher Option 1: view assigned course========
-		public static String retrieveAssignedCourse(ArrayList<Course> courseList, Account acc) 
-		{
-			String output = "";
-
-			for (Course existingCourse : courseList) 
-			{
-				if(existingCourse.getUserID() == acc.getUserID())
-				{
-					output += existingCourse.courseDisplay();
-				}
-			}
-			return output;
-		}
-		
-		public static void viewAssignedCourse(ArrayList<Course> courseList, Account acc) 
-		{
-			setHeader("Assigned Course");
-			
-			String output = String.format("%-10s %-25s %-40s %-10s %-10s %-10s\n", "COURSE ID", "COURSE NAME", "DESCRIPTION", "DURATION", "COST", "SIZE");
-			output += retrieveAssignedCourse(courseList, acc);
-			
-			System.out.println(output);
-		}
-
-	// ========Teacher Option 1: Maintain attendance========
-
-	// ========Student Functions========
-
-	// ========Student Option 1: View Student fees========
-	private static String retrivePersonalFees(ArrayList<FeeDetails> feesList, Account acc) {
-		setHeader("Personal Fees");
+	public static String retrieveAssignedCourse(ArrayList<Course> courseList, Account acc) 
+	{
 		String output = "";
 
-		for (FeeDetails existingFees : feesList) {
-			if (existingFees.getUserID() == acc.getUserID()) {
-				if ((existingFees.getPaymentStatus()).equalsIgnoreCase("Pending")) {
+		for (Course existingCourse : courseList) 
+		{
+			if(existingCourse.getUserID() == acc.getUserID())
+			{
+				output += existingCourse.courseDisplay() + "\n";
+			}
+		}
+		return output;
+	}
+	
+	public static void viewAssignedCourse(ArrayList<Course> courseList, Account acc) 
+	{
+		setHeader("Assigned Course");
+		
+		String output = String.format("%-10s %-25s %-40s %-10s %-10s %-10s\n", "COURSE ID", "COURSE NAME", "DESCRIPTION", "DURATION", "COST", "SIZE");
+		output += retrieveAssignedCourse(courseList, acc);
+		
+		System.out.println(output);
+	}
+	
+	//========Teacher Option 1: Maintain attendance========
+	
+	
+	
+	//========Student Functions========
+	
+	
+		
+	//========Student Option 1: View Student fees========
+	private static String retrivePersonalFees(ArrayList<FeeDetails> feesList, Account acc)
+	{
+		String output = "";
+		
+		for(FeeDetails existingFees : feesList)
+		{
+			if(existingFees.getUserID() == acc.getUserID())
+			{
+				if((existingFees.getPaymentStatus()).equalsIgnoreCase("Pending"))
+				{
 					output += existingFees.feeString();
 				}
-
-				else {
+				
+				else
+				{
 					output = "No pending fees";
 				}
 			}
 		}
 		return output;
 	}
-
-	private static void viewPersonalFees(ArrayList<FeeDetails> feesList, Account acc) {
-		setHeader("ALL FEE");
-		String output = String.format("%-20s %-15s %-15s %-20s\n", "FEE TYPES", "AMOUNT", "DUE DATE", "PAYMENT STATUS");
+	
+	private static void viewPersonalFees(ArrayList<FeeDetails> feesList, Account acc)
+	{
+		setHeader("Personal Fees");
+		
+		String output = String.format("%-20s %-15s %-15s %-20s\n","FEE TYPES","AMOUNT","DUE DATE","PAYMENT STATUS");
 		output += retrivePersonalFees(feesList, acc);
 		System.out.println(output);
 	}
+	
+	//========Student Option 1: View student attendance========
 
-	// ========Student Option 1: View student attendance========
+	
+	
+	//========Student Option 2: Maintain enrollment (View)========
+	private static String retriveEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc)
+	{	
+		String output = "";
+		
+		for (CourseEnroll course : enrollmentList)
+		{
+			if(course.getUserID() == acc.getUserID())
+			{
+				output += course.courseDisplay() + "\n";
+			}
+		}
+		
+		return output;
+	}
+	
+	public static void viewEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc) 
+	{
+		setHeader("Assigned Course");
+		
+		String output = String.format("%-10s %-25s %-40s %-10s %-10s %-10s\n", "COURSE ID", "COURSE NAME", "DESCRIPTION", "DURATION", "COST", "SIZE");
+		output += retriveEnrollment(enrollmentList, acc);
+		
+		System.out.println(output);
+	}
+	
+	//========Student Option 2: Maintain enrollment (Add)======== 
+	public static void addEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account acc)
+	{
+		boolean empty = false;
+		boolean courseFound = false;
+		boolean courseEnrolled = false;
+		boolean courseAdded = false;
+		
+		setHeader("Add Enrollment");
+		String cid = Helper.readString("Enter course id to enroll > ");
+		
+		//Check if String is empty
+		if(cid.isEmpty())
+		{
+			empty=true;
+		}
+		
+		
+		
+		//if cid is not empty
+		else
+		{
+			for(int i = 0; i < courseList.size(); i++)
+			{
+				Course existingCourse = courseList.get(i);
+				
+				//Check if course id is valid 
+				if(existingCourse.getCid().equals(cid))
+				{
+					courseFound = true;
+					
+					for(int j = 0; j < enrollmentList.size(); j++)
+					{
+						CourseEnroll enrollment = enrollmentList.get(j);
+						
+						//Check if student has already enrolled
+						if(enrollment.getCid().equals(cid) && acc.getUserID() == enrollment.getUserID())
+						{
+							courseEnrolled = true;
+							break;
+						}	 
+					}
+					
+					if(!courseEnrolled)
+					{
+						enrollmentList.add(new CourseEnroll(acc.getUserID(),cid, existingCourse.getCname(), 
+								existingCourse.getDescription(), existingCourse.getDuration(), 
+								existingCourse.getCost(), existingCourse.getSize()));
+						courseAdded = true;
+					}
+				}
+			}
+		}
+		
+		if(empty == true)
+		{
+			System.out.println("\nPlease fill in the blank");
+		}
+		else if(courseFound == false)
+		{
+			System.out.println("\nCourse " + cid + " not found.\n");
+		}
+		else if(courseEnrolled == true)
+		{
+			System.out.println("\nAlready enrolled in course " + cid);
+		}
+		else if(courseAdded == true)
+		{
+			System.out.println("\nEnrolled in course " + cid);
+		}
+	}
 
-	// ========Student Option 1: Maintain enrollment
+	//========Student Option 2: Maintain enrollment (update)========
+	public static void updateEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account acc)
+	{
+		boolean empty = false;
+		boolean courseFound = false;
+		boolean courseEnrolled = false;
+		boolean courseUpdated = false;
+		
+		setHeader("Update Enrollment");
+	    String cidToUpdate = Helper.readString("Enter course id to update enrollment > ");
+	    
+	    // Check if String is empty
+	    if (cidToUpdate.isEmpty()) 
+	    {
+	        empty = true;
+	    } 
+	    
+	    else 
+	    {
+	    	CourseEnroll existingEnrollment = null;
+	    	
+	    	//Check if student is enrolled in cid to update
+	    	for(CourseEnroll enrollment : enrollmentList)
+	    	{
+	    		if (enrollment.getCid().equals(cidToUpdate) && acc.getUserID() == enrollment.getUserID()) 
+	    		{
+	               existingEnrollment = enrollment;
+	               break;     
+	            }
+	    	}
+	    	
+	    	if (existingEnrollment != null) 
+	    	{
+	            // Student is already enrolled in the specified course
+	            courseEnrolled = true;
+	            
+	            String newCid = Helper.readString("Enter new course id to enroll > ");
+	    	
+	            for (Course newCourse : courseList) 
+	            {
+	            	// if new cid is valid
+	                if (newCourse.getCid().equals(newCid)) 
+	                {
+	                    courseFound = true;
+	                    
+	                    //update enrollment to new course information
+	                    existingEnrollment.setCid(newCid);
+	                    existingEnrollment.setCname(newCourse.getCname());
+	                    existingEnrollment.setDescription(newCourse.getDescription());
+	                    existingEnrollment.setDuration(newCourse.getDuration());
+	                    existingEnrollment.setCost(newCourse.getCost());
+	                    existingEnrollment.setSize(newCourse.getSize());
+
+	                    courseUpdated = true;
+	                    break;
+	                }
+	            }
+	    	}
+	    }
+
+	    if (empty) 
+	    {
+	        System.out.println("\nPlease fill in the blank");
+	    } 
+	    else if (!courseFound) 
+	    {
+	        System.out.println("\nCourse not found or new course id is invalid.\n");
+	    } 
+	    else if (courseEnrolled && courseUpdated) 
+	    {
+	        System.out.println("\nEnrollment updated for course " + cidToUpdate + "\n");
+	    }
+	}
+	
+	//========Student Option 2: Maintain enrollment (delete)========
+	public static void deleteEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc)
+	{
+		boolean enrollmentFound = false;
+		
+		setHeader("Remove Enrollment");
+	    String cidToRemove = Helper.readString("Enter course id to remove enrollment > ");
+	    
+	    for (int i = 0; i < enrollmentList.size(); i++)
+	    {
+	    	CourseEnroll enrollment = enrollmentList.get(i);
+	    	
+	    	if(enrollment.getCid().equals(cidToRemove) && acc.getUserID() == enrollment.getUserID())
+	    	{
+	    		enrollmentFound = true;
+	    		enrollmentList.remove(i); 
+	    		System.out.println("\nEnrollment for course " + cidToRemove + " has been removed.");
+	    		break;
+	    	}
+	    }
+	    
+	    if(!enrollmentFound)
+	    {
+	        System.out.println("\nYou are not enrolled in the course " + cidToRemove);
+	    }
+	    
+	    
+	}	
 
 }
