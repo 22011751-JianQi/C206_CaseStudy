@@ -63,12 +63,13 @@ public class Course extends Account{
 	
 	public String courseDisplay()
 	{
-		String courseInfo = String.format("%-20s %-25s %-40s %-10s %-10.2f",
+		String courseInfo = String.format("%-10s %-25s %-40s %-10.1f %-10.2f %-10d",
 				cid,
 				cname,
 			    description, 
 			    duration,
-			    cost);
+			    cost,
+			    size);
 		
 		return courseInfo;
 	}
