@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -42,17 +44,15 @@ public class TuitionManagement
 	private static final int Update = 2;
 	private static final int Delete = 3;
 
-	private static final String Course_Pattern = "^[A-Z]\\d{3}$";
-	private static final String UserID_Pattern = "";
-	
+	private static final String Date_Formatter = "dd/MM/yyyy";
 	private static final String Cid_Pattern = "[Cc]\\d{3}";
 	private static final String des_Pattern = ".{1,40}";
 	private static final String Size_Pattern= "[1-2][0-9]|30";
 	
-	
-	
-	
-	
+	private static final String UserID_Pattern = "\\b\\d{8}\\b";
+	private static final String Name_Pattern = "^.{45}$";
+	private static final String Mobile_Pattern = "\\b\\d{8}\\b";
+	private static final String Email_Pattern = "^[a-zA-Z0-9._-]{1,45}@gmail\\.com$";
 
 	public static void main(String[] args) 
 	{
@@ -190,7 +190,7 @@ public class TuitionManagement
 	                 
 	                //Option 7    
 	                case View_Fees_Collection:
-	                   // viewFeesCollection(feeList);
+	                   viewFeesCollection(feeList);
 	                    break;
 	                 
 	                //Option 8   
@@ -200,7 +200,7 @@ public class TuitionManagement
 	                
 	                //Option 9
 	                case View_Financial_Statitic:
-	                	//
+	                	viewFinancialStatistics(feeList,courseList);
 	                	break;
 	                
 	                //Option 10	
@@ -234,18 +234,18 @@ public class TuitionManagement
 			
 			switch (maintainOption) 
 			{
-            case 1:
+            case Add:
                 Account newAdmin = inputAccount();
                 addAdmin(accountList, newAdmin);
                 break;
-            case 2:
+            case Update:
                 updateAdmin(accountList);
                 break;
-            case 3:
+            case Delete:
             	int deleteUserID = Helper.readInt("Enter administrator user id for delete > ");
                 deleteAdmin(accountList, deleteUserID);
                 break;
-            case 4:
+            case Quit:
                 isRunning = false;
                 System.out.println("\nReturn to login menu.\n");
                 break;
@@ -268,17 +268,17 @@ public class TuitionManagement
 
 	        switch (maintainOption) 
 	        {
-	            case 1:
+	            case Add:
 	                Account newTeacher = inputAccount();
 	                addTeacher(accountList, newTeacher);
 	                break;
-	            case 2:
+	            case Update:
 	                updateTeacher(accountList);
 	                break;
-	            case 3:
+	            case Delete:
 	                deleteTeacher(accountList);
 	                break;
-	            case 4:
+	            case Quit:
 	                isRunning = false;
 	                System.out.println("\nReturn to login menu.\n");
 	                break;
@@ -301,17 +301,17 @@ public class TuitionManagement
 
 	        switch (maintainOption) 
 	        {
-	            case 1:
+	            case Add:
 	                Account newStudent = inputAccount();
 	                addStudent(accountList, newStudent);
 	                break;
-	            case 2:
+	            case Update:
 	                updateStudent(accountList);
 	                break;
-	            case 3:
+	            case Delete:
 	                deleteStudent(accountList);
 	                break;
-	            case 4:
+	            case Quit:
 	                isRunning = false;
 	                System.out.println("\nReturn to login menu.\n");
 	                break;
@@ -335,17 +335,17 @@ public class TuitionManagement
 
 	        switch (maintainOption) 
 	        {
-	            case 1:
+	            case Add:
 	                FeeDetails newFee = inputFee();
 	                createFee(feeList, newFee);
 	                break;
-	            case 2:
+	            case Update:
 	                updateFees(feeList);
 	                break;
-	            case 3:
+	            case Delete:
 	                deleteFee(feeList);
 	                break;
-	            case 4:
+	            case Quit:
 	                isRunning = false;
 	                System.out.println("\nReturn to login menu.\n");
 	                break;
@@ -369,24 +369,24 @@ public class TuitionManagement
 
 	        switch (maintainOption) 
 	        {
-	            case 1:
+	            case Add:
 	                Course newCourse = inputCourse(courseList);
 	                if (newCourse != null) 
 	                {
 	                    addCourse(accountList, courseList, newCourse);
 	                }
 	                break;
-	            case 2:
+	            case Update:
 	                Course updatedCourse = inputUpdateCourse(courseList);
 	                if (updatedCourse != null) {
 	                    updateCourse(accountList, courseList, updatedCourse);
 	                }
 	                break;
-	            case 3:
+	            case Delete:
 	                String courseIdToDelete = Helper.readString("Enter course ID to delete >  ");
 	                deleteCourse(courseList, courseIdToDelete);
 	                break;
-	            case 4:
+	            case Quit:
 	                isRunning = false;
 	                System.out.println("\nReturn to login menu.\n");
 	                break;
@@ -504,7 +504,7 @@ public class TuitionManagement
 	                    //Option 2
 	                    // View enrollment
 	                    case 2:
-	                        handleStudentEnrollment(courseList, enrollmentList, studentLoginAcct);
+	                        handleStudentEnrollment(courseList, enrollmentList, studentLoginAcct,feeList);
 	                        break;
 	                    case 3:
 	                        System.out.println("\nReturn to login\n");
@@ -568,7 +568,7 @@ public class TuitionManagement
 	}
 	
 	//Option 2
-	public static void handleStudentEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account studentLoginAcct) {
+	public static void handleStudentEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account studentLoginAcct,ArrayList<FeeDetails> feeList) {
 		boolean isRunning = true;
 		
 		while(isRunning)
@@ -583,7 +583,7 @@ public class TuitionManagement
 		        	//Option 1
 		        	// Add enrollment
 		            case 1:
-		                addEnrollment(courseList, enrollmentList, studentLoginAcct);
+		                addEnrollment(courseList, enrollmentList, studentLoginAcct,feeList);
 		                break;
 		            
 		            //Option 2
@@ -686,6 +686,13 @@ public class TuitionManagement
 		Helper.line(80, "-");
 	}
 	
+	//========Student Menu 3: under option 1========
+	public static void studentMenu3() {
+		TuitionManagement.setHeader("Student Menu");
+		System.out.println("1. Make Payment");
+		System.out.println("2. Return");
+		Helper.line(80, "-");
+	}
 	
 	
 	// ========Maintain account menu========
@@ -873,7 +880,7 @@ public class TuitionManagement
 	public static void viewAdminAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Administrator accounts");
 
-		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
+		String output = String.format("%-10s %-30s %-10s %-15s %-10s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
 
 		output += retriveAllUsers(accountList);
 		System.out.println(output);
@@ -884,34 +891,43 @@ public class TuitionManagement
 		Account account;
 		boolean duplicate = false;
 		boolean empty = false;
-
-		// Check for empty fields
-		if ((acc.getName()).isEmpty() || acc.getUserID() <= 0 || (acc.getEmail()).isEmpty() || acc.getMobileNum() <= 0
-				|| (acc.getPassword()).isEmpty()) {
-			empty = true;
-		}
-
-		else {
-			for (int i = 0; i < accountList.size(); i++) {
-				account = accountList.get(i);
-
-				if (account.getUserID() == acc.getUserID() || (account.getEmail()).equalsIgnoreCase(acc.getEmail())
-						|| account.getMobileNum() == acc.getMobileNum()) {
-					duplicate = true;
-					break;
+		boolean validID = String.valueOf(acc.getUserID()).matches(UserID_Pattern);
+		
+		if(validID)
+		{
+			// Check for empty fields
+			if ((acc.getName()).isEmpty() || acc.getUserID() <= 0 || (acc.getEmail()).isEmpty() || acc.getMobileNum() <= 0
+					|| (acc.getPassword()).isEmpty()) {
+				empty = true;
+			}
+	
+			else {
+				for (int i = 0; i < accountList.size(); i++) {
+					account = accountList.get(i);
+	
+					if (account.getUserID() == acc.getUserID() || (account.getEmail()).equalsIgnoreCase(acc.getEmail())
+							|| account.getMobileNum() == acc.getMobileNum()) {
+						duplicate = true;
+						break;
+					}
 				}
 			}
+	
+			if (empty == true) {
+				System.out.println("\nPlease fill in all account details.\n");
+			} else if (duplicate == true) {
+				System.out.println("\nUser id, email or mobile number already exist.\n");
+			} else {
+				acc.setRole("Admin");
+				accountList.add(acc);
+				System.out.println("\nUser account " + acc.getUserID() + " successfully created.\n");
+			}
+		}
+		else
+		{
+			System.out.println("\nInvalid user id.\n");
 		}
 
-		if (empty == true) {
-			System.out.println("\nPlease fill in all account details.\n");
-		} else if (duplicate == true) {
-			System.out.println("\nUser id, email or mobile number already exist.\n");
-		} else {
-			acc.setRole("Admin");
-			accountList.add(acc);
-			System.out.println("\nUser account " + acc.getUserID() + " successfully created.");
-		}
 
 	}
 
@@ -1385,7 +1401,7 @@ public class TuitionManagement
 	public static boolean doDeleteFee(ArrayList<FeeDetails> feeList,FeeDetails newFee) {
 		boolean isDeleted = false;
 		for (int i = 0 ; i < feeList.size(); i++) {
-			if(feeList.get(i).getUserID()== newFee.getUserID() && feeList.get(i).getType().equalsIgnoreCase(newFee.getType())) {
+			if(feeList.get(i).getUserID()== newFee.getUserID() && feeList.get(i).getType().equalsIgnoreCase(newFee.getType()) && feeList.get(i).getPrice() == newFee.getPrice()) {
 				feeList.remove(i);
 				isDeleted = true;
 				break;
@@ -1612,7 +1628,53 @@ public class TuitionManagement
 		System.out.println("Course ID " + courseId + " not found.");
 	}
 
-	
+	//========Administrator option 7: View Fee Collection========
+		public static String retrieveFeesCollection(ArrayList<FeeDetails> feeList) {
+			String output = "";
+					for(int j=0; j<feeList.size();j++) {
+						if(feeList.get(j).getPaymentStatus().equalsIgnoreCase("Pending")) {
+							String feeInfo = feeList.get(j).feeString();
+							
+							output += String.format("%-15d %-69s\n", feeList.get(j).getUserID(), feeInfo);
+						}
+						
+					}
+			
+			
+
+			return output;
+		}
+
+
+		public static void viewFeesCollection(ArrayList<FeeDetails> feeList) {
+			setHeader("FEE COLLECTION");
+			String output = String.format("%-15s %-20s %-15s %-15s %-20s\n","ID","FEE TYPES","AMOUNT","DUE DATE","PAYMENT STATUS");
+			output += retrieveFeesCollection(feeList);
+			System.out.println(output);
+		}
+		
+		//========Administrator option 9: View Financial Statistics========
+		public static void viewFinancialStatistics(ArrayList<FeeDetails> feeList, ArrayList<Course> courseList) {
+			double revenue = 0;
+			String output2 = String.format("%-10s : %s\n","COURSE","REVENUE");
+			TuitionManagement.setHeader("REVENUE");
+			for(int i = 0; i<courseList.size(); i++) {
+				for(int j = 0; j< feeList.size(); j ++) {
+					if(courseList.get(i).getCid().equalsIgnoreCase(feeList.get(j).getType()) && feeList.get(j).getPaymentStatus().equalsIgnoreCase("Paid")){
+						output2 += String.format("%-10s : %.2f\n",courseList.get(i).getCname(), feeList.get(j).getPrice());
+					}
+				}
+			}
+			for(FeeDetails fee: feeList) {
+				if(fee.getPaymentStatus().equalsIgnoreCase("Paid")) {
+					revenue += fee.getPrice();
+				}
+			}
+			
+			System.out.println(output2);
+			String output = String.format("%-10s : $%.2f\n", "Total Revenue",revenue);
+			System.out.println(output);
+		}
 	
 	//========Teacher Functions========
 	
@@ -1676,13 +1738,48 @@ public class TuitionManagement
 	
 	public static void viewPersonalFees(ArrayList<FeeDetails> feesList, Account acc)
 	{
+		int paymentOption = 0;
 		setHeader("Personal Fees");
 		
 		String output = String.format("%-20s %-15s %-15s %-20s\n","FEE TYPES","AMOUNT","DUE DATE","PAYMENT STATUS");
 		output += retrivePersonalFees(feesList, acc);
 		System.out.println(output);
+		studentMenu3();
+		paymentOption = Helper.readInt("Enter an option > ");
+		if(paymentOption == 1) {
+			makePayment(feesList,acc);
+		} else if (paymentOption > 3) {
+			System.out.println("Invalid Option");
+		}
 	}
-	
+	//========Student Option 1: Make Payment========
+		public static boolean doMakePayment(ArrayList<FeeDetails> feeList,  int id, String type, String dueDate) {
+			boolean isUpdated = false;
+			
+			if(type.isEmpty()||dueDate.isEmpty()) 
+				return false;
+			
+			for (int i = 0; i < feeList.size();i++) {
+				if(id == feeList.get(i).getUserID() && type.equalsIgnoreCase(feeList.get(i).getType()) && dueDate.equalsIgnoreCase(dueDate)) {
+					feeList.get(i).setPaymentStatus("Paid");
+					isUpdated = true;
+				}
+			}
+			return isUpdated;
+		}
+		
+		public static void makePayment(ArrayList<FeeDetails> feeList, Account acc) {
+			int id = acc.getUserID();
+			String type = Helper.readString("Enter the fee type: ");
+			String duedate = Helper.readString("Enter the fee due date (dd/mm/yyyy): ");
+			Boolean isUpdated = doMakePayment(feeList,id,type,duedate);
+			if (!isUpdated) {
+				System.out.println("Invalid input");
+			} else {
+				System.out.println("Paid Successfully");
+			}
+		}
+		
 	//========Student Option 1: View student attendance========
 
 	
@@ -1714,7 +1811,7 @@ public class TuitionManagement
 	}
 	
 	//========Student Option 2: Maintain enrollment (Add)======== 
-	public static void addEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account acc)
+	public static void addEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account acc,ArrayList<FeeDetails> feeList)
 	{
 		boolean empty = false;
 		boolean courseFound = false;
@@ -1761,6 +1858,12 @@ public class TuitionManagement
 						enrollmentList.add(new CourseEnroll(acc.getUserID(),cid, existingCourse.getCname(), 
 								existingCourse.getDescription(), existingCourse.getDuration(), 
 								existingCourse.getCost(), existingCourse.getSize()));
+						LocalDate currentDate = LocalDate.now();
+						LocalDate thirtydaysafter = LocalDate.of(currentDate.getYear(), currentDate.getMonthValue() + 1, currentDate.getDayOfMonth());
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Date_Formatter);
+						String dueDate = thirtydaysafter.format(formatter);
+						FeeDetails newFee = new FeeDetails(acc.getUserID(), existingCourse.getCid(), existingCourse.getCost(),dueDate, "Pending");
+						createFee(feeList,newFee);
 						courseAdded = true;
 					}
 				}

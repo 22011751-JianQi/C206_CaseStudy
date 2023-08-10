@@ -93,7 +93,7 @@ public class Account
 	
 	public String toString() 
 	{
-		String accInfo = String.format("%-10s %-30d %-10s %-10d %-10s", name, userID, email, mobileNum, password);	
+		String accInfo = String.format("%-10s %-20d %-20s %-15d %-10s", name, userID, email, mobileNum, password);	
 		return accInfo;
 	}
 	
