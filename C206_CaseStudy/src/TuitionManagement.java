@@ -41,6 +41,14 @@ public class TuitionManagement
 
 	private static final String Course_Pattern = "^[A-Z]\\d{3}$";
 	private static final String UserID_Patter = "";
+	private static final String Cid_Pattern = "[Cc]\\d{3}";
+	private static final String des_Pattern = ".{1,40}";
+	private static final String Size_Pattern= "[1-2][0-9]|30";
+	
+	
+	
+	
+	
 
 	public static void main(String[] args) 
 	{
@@ -510,7 +518,7 @@ public class TuitionManagement
 	//========Handle student functions========
 	//Under Option 1
 	//
-	private static void handleStudentInfo(ArrayList<Account> accountList, ArrayList<FeeDetails> feesList, Account studentLoginAcct) {
+	public static void handleStudentInfo(ArrayList<Account> accountList, ArrayList<FeeDetails> feesList, Account studentLoginAcct) {
 		boolean isRunning = true;
 		
 		while(isRunning)
@@ -555,7 +563,7 @@ public class TuitionManagement
 	}
 	
 	//Option 2
-	private static void handleStudentEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account studentLoginAcct) {
+	public static void handleStudentEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account studentLoginAcct) {
 		boolean isRunning = true;
 		
 		while(isRunning)
@@ -619,11 +627,11 @@ public class TuitionManagement
 	// ========Administrator Menu========
 	public static void adminMenu() {
 		TuitionManagement.setHeader("Administrator Menu");
-		System.out.println("1. Maintain admin account");
-		System.out.println("2. Maintain teacher account");
-		System.out.println("3. Maintain student account");
-		System.out.println("4. Manage studet fees");
-		System.out.println("5. Maintain courses");
+		System.out.println("1. View admin account");
+		System.out.println("2. View teacher account");
+		System.out.println("3. View student account");
+		System.out.println("4. View student fees");
+		System.out.println("5. View courses");
 		System.out.println("6. View enrolment statistics (Not done)");
 		System.out.println("7. View fees collection (Not done)");
 		System.out.println("8. View student performance (Not done)");
@@ -717,7 +725,7 @@ public class TuitionManagement
 	
 	
 	// ========Administrator login validation========
-	private static Account validateAdmin(ArrayList<Account> accountList) {
+	public static Account validateAdmin(ArrayList<Account> accountList) {
 
 		int inputUserID = Helper.readInt("Enter Admin user ID > ");
 		String inputPassword = Helper.readString("Enter Admin password > ");
@@ -733,7 +741,7 @@ public class TuitionManagement
 	}
 
 	// ========Teacher login validation========
-	private static Account validateTeacher(ArrayList<Account> accountList) {
+	public static Account validateTeacher(ArrayList<Account> accountList) {
 		int inputUserID = Helper.readInt("Enter Teacher user ID > ");
 		String inputPassword = Helper.readString("Enter Teacher password > ");
 
@@ -748,7 +756,7 @@ public class TuitionManagement
 	}
 
 	// ========Student login validation========
-	private static Account validateStudent(ArrayList<Account> accountList) {
+	public static Account validateStudent(ArrayList<Account> accountList) {
 		int inputUserID = Helper.readInt("Enter Student user ID > ");
 		String inputPassword = Helper.readString("Enter Student password > ");
 
@@ -765,7 +773,7 @@ public class TuitionManagement
 	
 	
 	//========Display personal info (student/teacher)========
-	private static void viewInfo(Account acc)
+	public static void viewInfo(Account acc)
 	{
 		setHeader("Personal Information");
 		
@@ -774,7 +782,7 @@ public class TuitionManagement
 	}
 	
 	//========Update personal info (student/teacher)========
-	private static void updatePersonal(ArrayList<Account> accountList, Account acc)
+	public static void updatePersonal(ArrayList<Account> accountList, Account acc)
 	{
 		setHeader("Update Personal Information");
 		
@@ -844,7 +852,7 @@ public class TuitionManagement
 	}
 
 	// ========Administrator option 1: Maintain user account (View)========
-	private static String retriveAllUsers(ArrayList<Account> accountList) {
+	public static String retriveAllUsers(ArrayList<Account> accountList) {
 		String output = "";
 
 		for (int i = 0; i < accountList.size(); i++) {
@@ -857,7 +865,7 @@ public class TuitionManagement
 		return output;
 	}
 
-	private static void viewAdminAcc(ArrayList<Account> accountList) {
+	public static void viewAdminAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Administrator accounts");
 
 		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
@@ -994,7 +1002,7 @@ public class TuitionManagement
 	
 	
 	// ========Administrator Option 2: Maintain teacher account (View)========
-	private static String retriveAllTeachers(ArrayList<Account> accountList) {
+	public static String retriveAllTeachers(ArrayList<Account> accountList) {
 		String output = "";
 
 		for (int i = 0; i < accountList.size(); i++) {
@@ -1007,7 +1015,7 @@ public class TuitionManagement
 		return output;
 	}
 
-	private static void viewTeachAcc(ArrayList<Account> accountList) {
+	public static void viewTeachAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Teacher accounts");
 
 		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
@@ -1142,7 +1150,7 @@ public class TuitionManagement
 	
 	
 	// =========Administrator Option 3: Maintain Student Account (View)
-	private static String retriveAllStudents(ArrayList<Account> accountList) {
+	public static String retriveAllStudents(ArrayList<Account> accountList) {
 		String output = "";
 		for (int i = 0; i < accountList.size(); i++) {
 			if ((accountList.get(i).getRole()).equalsIgnoreCase("Student")) {
@@ -1154,7 +1162,7 @@ public class TuitionManagement
 		return output;
 	}
 
-	private static void viewStudentAcc(ArrayList<Account> accountList) {
+	public static void viewStudentAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Student accounts");
 
 		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
@@ -1427,6 +1435,7 @@ public class TuitionManagement
 	// ========Administrator Option 5: Maintain courses (Add)========
 	public static Course inputCourse(ArrayList<Course> courseList) {
 		TuitionManagement.setHeader("ADD COURSE");
+		
 		String Cid = Helper.readString("Enter course id > ");
 
 		for (Course c : courseList) {
@@ -1480,6 +1489,26 @@ public class TuitionManagement
 				|| course.getSize()==0) {
 			return;
 		}
+		
+		//Input check
+		boolean toFormatCid = Pattern.matches(Cid_Pattern, course.getCid());
+		boolean toFormatDes = Pattern.matches(des_Pattern, course.getDescription());
+		String size = Integer.toString(course.getSize());
+		boolean toFormatSize = Pattern.matches(Size_Pattern,size);
+		
+		if(!toFormatCid) {
+			System.out.println("ID must start with C with 3 integers");
+			return;
+		}
+		if(!toFormatDes) {
+			System.out.println("Description maximum 40 characters");
+			return;
+		}
+		if(!toFormatSize) {
+			System.out.println("Size must be 10-30");
+			return;
+		}
+	
 
 		courseList.add(course);
 		System.out.println("Course added.");
@@ -1531,6 +1560,21 @@ public class TuitionManagement
 				|| Ncourse.getDuration()==0
 				|| Ncourse.getCost()==0
 				|| Ncourse.getSize()==0) {
+			return;
+		}
+	    
+	    
+	    //input check
+	    boolean toFormatDes = Pattern.matches(des_Pattern, Ncourse.getDescription());
+		String size = Integer.toString(Ncourse.getSize());
+		boolean toFormatSize = Pattern.matches(Size_Pattern,size);
+		
+		if(!toFormatDes) {
+			System.out.println("Description maximum 40 characters");
+			return;
+		}		
+		if(!toFormatSize) {
+			System.out.println("Size must be 10-30");
 			return;
 		}
 	    
@@ -1604,7 +1648,7 @@ public class TuitionManagement
 	
 		
 	//========Student Option 1: View Student fees========
-	private static String retrivePersonalFees(ArrayList<FeeDetails> feesList, Account acc)
+	public static String retrivePersonalFees(ArrayList<FeeDetails> feesList, Account acc)
 	{
 		String output = "";
 		
@@ -1626,7 +1670,7 @@ public class TuitionManagement
 		return output;
 	}
 	
-	private static void viewPersonalFees(ArrayList<FeeDetails> feesList, Account acc)
+	public static void viewPersonalFees(ArrayList<FeeDetails> feesList, Account acc)
 	{
 		setHeader("Personal Fees");
 		
@@ -1640,7 +1684,7 @@ public class TuitionManagement
 	
 	
 	//========Student Option 2: Maintain enrollment (View)========
-	private static String retriveEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc)
+	public static String retriveEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc)
 	{	
 		String output = "";
 		
