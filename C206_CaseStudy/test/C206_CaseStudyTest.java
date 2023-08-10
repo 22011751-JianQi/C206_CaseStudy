@@ -70,7 +70,8 @@ public class C206_CaseStudyTest
 		fd5=null;
 		feeList=null;
 	}
-
+	
+	//JianQi
 	@Test
 	public void testAddAdministrator() 
 	{
@@ -91,6 +92,7 @@ public class C206_CaseStudyTest
 		assertEquals("Check that invalid admin account is not added", 1, accountList.size());
 	}
 	
+	//JianQi
 	@Test
 	public void testDeleteAdministrator() 
 	{
@@ -111,6 +113,7 @@ public class C206_CaseStudyTest
 		
 	}
 	
+	//JianQi
 	@Test
 	public void testViewAdministrator() 
 	{
@@ -130,7 +133,8 @@ public class C206_CaseStudyTest
 		assertEquals("Test that the retrieved accountList is empty?", testOutput, allAdmin);
 		
 		// Test that only administrator is displayed
-		
+		TuitionManagement.addTeacher(accountList, teacher3);
+		assertEquals("Test that the retrieved accountList is empty?", testOutput, allAdmin);
 	}
 	
 	   @Test

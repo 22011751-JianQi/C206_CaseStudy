@@ -736,7 +736,7 @@ public class TuitionManagement
 	}
 	
 	
-	
+	//JianQi
 	// ========Administrator login validation========
 	public static Account validateAdmin(ArrayList<Account> accountList) {
 
@@ -752,7 +752,8 @@ public class TuitionManagement
 		}
 		return null;
 	}
-
+	
+	//JianQi
 	// ========Teacher login validation========
 	public static Account validateTeacher(ArrayList<Account> accountList) {
 		int inputUserID = Helper.readInt("Enter Teacher user ID > ");
@@ -851,7 +852,7 @@ public class TuitionManagement
 	
 	
 	
-	
+	//JianQi
 	// ========Maintain account input========
 	public static Account inputAccount() {
 		String name = Helper.readString("Enter account name > ");
@@ -864,6 +865,7 @@ public class TuitionManagement
 		return acc;
 	}
 
+	//JianQi
 	// ========Administrator option 1: Maintain user account (View)========
 	public static String retriveAllUsers(ArrayList<Account> accountList) {
 		String output = "";
@@ -887,6 +889,7 @@ public class TuitionManagement
 		System.out.println(output);
 	}
 
+	//JianQi
 	// ======== Administrator option 1: Maintain user account(Add)========
 	public static void addAdmin(ArrayList<Account> accountList, Account acc) {
 		Account account;
@@ -932,6 +935,7 @@ public class TuitionManagement
 
 	}
 
+	//JianQi
 	// ========Administrator option 1: Maintain user account (Update)========
 	public static void updateAdmin(ArrayList<Account> accountList) {
 		// Check if account exist
@@ -998,6 +1002,7 @@ public class TuitionManagement
 		}
 	}
 
+	//JianQi
 	// ========Administrator Option 1: Maintain user account (Delete)========
 	public static void deleteAdmin(ArrayList<Account> accountList, int userID) 
 	{
@@ -1021,7 +1026,7 @@ public class TuitionManagement
 	}
 
 	
-	
+	//JianQi
 	// ========Administrator Option 2: Maintain teacher account (View)========
 	public static String retriveAllTeachers(ArrayList<Account> accountList) {
 		String output = "";
@@ -1045,6 +1050,7 @@ public class TuitionManagement
 		System.out.println(output);
 	}
 
+	//JianQi
 	// ========Administrator Option 2: Maintain teacher account (Add)========
 	public static void addTeacher(ArrayList<Account> accountList, Account acc) {
 		Account account;
@@ -1079,6 +1085,7 @@ public class TuitionManagement
 		}
 	}
 
+	//JianQi
 	// ========Administrator Option 2: Maintain teacher account (Update)========
 	public static void updateTeacher(ArrayList<Account> accountList) {
 		// Check if account exist
@@ -1145,6 +1152,7 @@ public class TuitionManagement
 		}
 	}
 
+	//JianQi
 	// ========Administrator Option 2: Maintain teacher account (Delete)========
 	public static void deleteTeacher(ArrayList<Account> accountList) {
 		// Check if account exist
@@ -1680,7 +1688,7 @@ public class TuitionManagement
 	//========Teacher Functions========
 	
 	
-	
+	//JianQi
 	//========Teacher Option 1: view assigned course========
 	public static String retrieveAssignedCourse(ArrayList<Course> courseList, Account acc) 
 	{
@@ -1713,7 +1721,7 @@ public class TuitionManagement
 	//========Student Functions========
 	
 	
-		
+	
 	//========Student Option 1: View Student fees========
 	public static String retrivePersonalFees(ArrayList<FeeDetails> feesList, Account acc)
 	{
