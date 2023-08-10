@@ -23,6 +23,9 @@ public class TuitionManagement
 	
 	//========Teacher menu options========
 	
+	
+	
+	
 	//========Student menu options========
 	private static final int View_Personal_Information = 1;
 	private static final int Maintain_Enrollment = 2;
@@ -40,7 +43,8 @@ public class TuitionManagement
 	private static final int Delete = 3;
 
 	private static final String Course_Pattern = "^[A-Z]\\d{3}$";
-	private static final String UserID_Patter = "";
+	private static final String UserID_Pattern = "";
+	
 	private static final String Cid_Pattern = "[Cc]\\d{3}";
 	private static final String des_Pattern = ".{1,40}";
 	private static final String Size_Pattern= "[1-2][0-9]|30";
@@ -113,7 +117,7 @@ public class TuitionManagement
 	        } 
 	        
 	        //Login as Teacher
-	        else if (loginOption == 2) 
+	        else if (loginOption == Login_Option_Teacher) 
 	        {
 	            handleTeacherLogin(accountList, courseList);
 	        } 
@@ -238,7 +242,8 @@ public class TuitionManagement
                 updateAdmin(accountList);
                 break;
             case 3:
-                deleteAdmin(accountList);
+            	int deleteUserID = Helper.readInt("Enter administrator user id for delete > ");
+                deleteAdmin(accountList, deleteUserID);
                 break;
             case 4:
                 isRunning = false;
@@ -977,12 +982,11 @@ public class TuitionManagement
 	}
 
 	// ========Administrator Option 1: Maintain user account (Delete)========
-	public static void deleteAdmin(ArrayList<Account> accountList) {
+	public static void deleteAdmin(ArrayList<Account> accountList, int userID) 
+	{
 		// Check if account exist
 		boolean adminAccFound = false;
-
-		int userID = Helper.readInt("Enter administrator user id for delete > ");
-
+		
 		for (int i = 0; i < accountList.size(); i++) {
 			Account adminAcc = accountList.get(i);
 
