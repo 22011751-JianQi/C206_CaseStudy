@@ -309,8 +309,9 @@ public class TuitionManagement
 	                updateStudent(accountList);
 	                break;
 	            case Delete:
-	                deleteStudent(accountList);
-	                break;
+	            	int deleteUserID = Helper.readInt("Enter student user id for delete > " );
+	        		deleteStudent(accountList, deleteUserID);
+	        		break;
 	            case Quit:
 	                isRunning = false;
 	                System.out.println("\nReturn to login menu.\n");
@@ -1169,12 +1170,14 @@ public class TuitionManagement
 
 	
 	
-	// =========Administrator Option 3: Maintain Student Account (View)
+	// =========Administrator Option 3: Maintain Student Account (View) //Saiful
 	public static String retriveAllStudents(ArrayList<Account> accountList) {
 		String output = "";
+		
 		for (int i = 0; i < accountList.size(); i++) {
-			if ((accountList.get(i).getRole()).equalsIgnoreCase("Student")) {
-				String accInfo = accountList.get(i).toString();
+			Account acc = accountList.get(i);//Extracting variable
+			if ((acc.getRole()).equalsIgnoreCase("Student")) {
+				String accInfo = acc.toString();
 
 				output += String.format("%-84s\n", accInfo);
 			}
@@ -1182,16 +1185,17 @@ public class TuitionManagement
 		return output;
 	}
 
-	public static void viewStudentAcc(ArrayList<Account> accountList) {
+	public static String viewStudentAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Student accounts");
 
 		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
 
 		output += retriveAllStudents(accountList);
 		System.out.println(output);
+		return output;
 	}
 
-	// ========Administrator Option 3: Maintain Student Account (Add)============
+	// ========Administrator Option 3: Maintain Student Account (Add)============ //Saiful
 	public static void addStudent(ArrayList<Account> accountList, Account acc) {
 		Account account;
 		boolean duplicate = false;
@@ -1202,11 +1206,10 @@ public class TuitionManagement
 				|| (acc.getPassword()).isEmpty()) {
 			empty = true;
 		}
-
 		else {
 			for (int i = 0; i < accountList.size(); i++) {
-				account = accountList.get(i);
-
+				account = accountList.get(i); //Extracting variable
+				//If duplicate
 				if (account.getUserID() == acc.getUserID() || (account.getEmail()).equalsIgnoreCase(acc.getEmail())
 						|| account.getMobileNum() == acc.getMobileNum()) {
 					duplicate = true;
@@ -1225,7 +1228,7 @@ public class TuitionManagement
 		}
 	}
 
-	// =========Administrator Option 3: Maintain Student account (Update)==========
+	// =========Administrator Option 3: Maintain Student account (Update)========== //Saiful
 	public static void updateStudent(ArrayList<Account> accountList) {
 		// Check if account exist
 		boolean studentAccFound = false;
@@ -1292,15 +1295,14 @@ public class TuitionManagement
 
 	}
 
-	// ========Administrator Option 3: Maintain Student account (Delete)========
-	public static void deleteStudent(ArrayList<Account> accountList) {
+	// ========Administrator Option 3: Maintain Student account (Delete)======== //Saiful
+	public static void deleteStudent(ArrayList<Account> accountList, int userID) {
 		// Check if account exist
 		boolean studentAccFound = false;
-
-		int userID = Helper.readInt("Enter student user id for delete > ");
+		//int userID = Helper.readInt("Enter student user id for delete > ");
 
 		for (int i = 0; i < accountList.size(); i++) {
-			Account studentAcc = accountList.get(i);
+			Account studentAcc = accountList.get(i); //Extracting variable
 
 			if (studentAcc.getUserID() == userID && (studentAcc.getRole()).equalsIgnoreCase("Student")) {
 				studentAccFound = true;
@@ -1309,12 +1311,11 @@ public class TuitionManagement
 				break;
 			}
 		}
-
+		
 		if (!studentAccFound) {
 			System.out.println("\nStudent account " + userID + " not found.\n");
 		}
 	}
-
 	
 	
 	//========Administrator Option 4: Maintain Fees (View)========
