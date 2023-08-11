@@ -11,7 +11,6 @@ public class TuitionManagement
 	private static final int Login_Option_Teacher = 2;
 	private static final int Login_Option_Student = 3;
 
-	
 	// ========Administrator menu options(Incomplete)========
 	private static final int Admin_Option_Quit = 10;
 	private static final int Maintain_Admin_Option = 1;

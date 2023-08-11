@@ -18,7 +18,8 @@ public class Account
 		this.role = role;
 	}
 	
-	public Account(int userID) {
+	public Account(int userID) 
+	{
 		this.userID = userID;
 	}
 
