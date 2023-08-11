@@ -313,6 +313,7 @@ public class TuitionManagement
 	    while (isRunning) 
 	    {
 	        viewStudentAcc(accountList);
+	        maintainMenu();
 	        int maintainOption = Helper.readInt("Enter your choice: ");
 
 	        switch (maintainOption) 
@@ -322,7 +323,8 @@ public class TuitionManagement
 	                addStudent(accountList, newStudent);
 	                break;
 	            case Update:
-	                updateStudent(accountList);
+	            	Account updateStudentAcc = inputUpdateAcc(accountList);
+	                updateStudent(accountList, updateStudentAcc);
 	                break;
 	            case Delete:
 	            	int deleteUserID = Helper.readInt("Enter student user id for delete > " );
@@ -1396,8 +1398,8 @@ public class TuitionManagement
 	public static String viewStudentAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Student accounts");
 
-		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
-
+		String output = String.format("%-10s %-15s %-25s %-12s %-10s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
+		
 		output += retriveAllStudents(accountList);
 		System.out.println(output);
 		return output;
@@ -1405,102 +1407,176 @@ public class TuitionManagement
 
 	// ========Administrator Option 3: Maintain Student Account (Add)============ //Saiful
 	public static void addStudent(ArrayList<Account> accountList, Account acc) {
-		Account account;
-		boolean duplicate = false;
 		boolean empty = false;
-
+		boolean duplicate = false;
+		boolean validUserID =  false;
+		boolean validName = false;
+		boolean validEmail = false;
+		boolean validMobile = false;
+	
 		// Check for empty fields
-		if ((acc.getName()).isEmpty() || acc.getUserID() <= 0 || (acc.getEmail()).isEmpty() || acc.getMobileNum() <= 0
-				|| (acc.getPassword()).isEmpty()) {
-			empty = true;
-		}
-		else {
-			for (int i = 0; i < accountList.size(); i++) {
-				account = accountList.get(i); //Extracting variable
-				//If duplicate
-				if (account.getUserID() == acc.getUserID() || (account.getEmail()).equalsIgnoreCase(acc.getEmail())
-						|| account.getMobileNum() == acc.getMobileNum()) {
-					duplicate = true;
-					break;
-				}
+			if ((acc.getName()).isEmpty() 
+					|| acc.getUserID() <= 0 
+					|| (acc.getEmail()).isEmpty() 
+					|| acc.getMobileNum() <= 0
+					|| (acc.getPassword()).isEmpty()) 
+			{
+				empty = true;
 			}
-		}
-
-		if (empty == true) {
-			System.out.println("\nPlease fill in all account details.\n");
-		} else if (duplicate == true) {
-			System.out.println("\nUser id, email or mobile number already exist.\n");
-		} else {
-			acc.setRole("Student");
-			accountList.add(acc);
-		}
-	}
-
-	// =========Administrator Option 3: Maintain Student account (Update)========== //Saiful
-	public static void updateStudent(ArrayList<Account> accountList) {
-		// Check if account exist
-		boolean studentAccFound = false;
-
-		int userID = Helper.readInt("Enter student user id for update > ");
-
-		for (int i = 0; i < accountList.size(); i++) {
-			Account studentAcc = accountList.get(i);
-
-			if (studentAcc.getUserID() == userID && studentAcc.getRole().equalsIgnoreCase("Student")) {
-				studentAccFound = true;
-
-				String name = Helper.readString("Enter student name > ");
-				String email = Helper.readString("Enter student email > ");
-				int mobileNum = Helper.readInt("Enter student mobile number > ");
-				String password = Helper.readString("Enter student password > ");
-
-				// Check for empty fields
-				// Check for duplicate email and mobile number
-				boolean empty = false;
-				boolean duplicate = false;
-
-				if (name.isEmpty() || email.isEmpty() || mobileNum <= 0 || password.isEmpty()) {
-					empty = true;
-				}
-
-				else {
-					for (Account existingStudent : accountList) {
-						if (existingStudent != studentAcc) {
-							if (existingStudent.getEmail().equalsIgnoreCase(email)
-									|| existingStudent.getMobileNum() == mobileNum) {
-								duplicate = true;
-								break;
-							}
+			else 
+			{
+				//Validate 
+				validUserID =  String.valueOf(acc.getUserID()).matches(UserID_Pattern);
+				validName = Pattern.matches(Name_Pattern, acc.getName());
+				validEmail = Pattern.matches(Email_Pattern, acc.getEmail());
+				validMobile = String.valueOf(acc.getMobileNum()).matches(Mobile_Pattern);
+				
+				if(validUserID && validName && validEmail && validMobile)
+				{
+					for(int i = 0; i < accountList.size(); i++)
+					{
+						int existingUserID = accountList.get(i).getUserID();
+						String existingEmail = accountList.get(i).getEmail();
+						int existingMobile = accountList.get(i).getMobileNum();
+					
+						//Check duplicate
+						if(acc.getUserID() == existingUserID 
+								|| acc.getEmail().equalsIgnoreCase(existingEmail) 
+								|| acc.getMobileNum() == existingMobile)
+						{
+							duplicate = true;
+							break;
 						}
 					}
 				}
-
-				if (empty == true) {
-					System.out.println("\nPlease fill in all account details.\n");
-				}
-				// Error message when email or mobile already exist
-				else if (duplicate == true) {
-					System.out.println("\nEmail or mobile number already exists. Student account not updated.\n");
-				}
-
+			}
+			//If empty
+			if (empty == true) 
+			{
+				System.out.println("\nPlease fill in all account details.\n");
+			} 
+			//Valid UserID
+			else if(!validUserID)
+			{
+				System.out.println("\nUser ID consists of 8 digits.\n");
+			}
+			//Valid name
+			else if(!validName)
+			{
+				System.out.println("\nName can only be 45 characters long.");
+			}
+			//Valid Email
+			else if(!validEmail)
+			{
+				System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+			}
+			//Valid Mobile
+			else if(!validMobile)
+			{
+				System.out.println("\nMobile number consists of 8 digits.\n");
+			}
+			//If duplicate
+			else if(duplicate)
+			{
+				System.out.println("\nDuplicate information exist.\n");
+			}
+				
+			else 
+			{
+				acc.setRole("Student");
+				accountList.add(acc);
+				System.out.println("\nStudent account " + acc.getUserID() + " successfully created.\n");
+			}
+	}
+	// =========Administrator Option 3: Maintain Student account (Update)========== //Saiful
+	public static void updateStudent(ArrayList<Account> accountList, Account updateAcc) {
+		if(updateAcc != null)
+		{
+			boolean validUserID =  String.valueOf(updateAcc.getUserID()).matches(UserID_Pattern);
+			boolean validName = Pattern.matches(Name_Pattern, updateAcc.getName());
+			boolean validEmail = Pattern.matches(Email_Pattern, updateAcc.getEmail());
+			boolean validMobile = String.valueOf(updateAcc.getMobileNum()).matches(Mobile_Pattern);
+			
+			boolean duplicate = false;
+			boolean empty = false;
+			boolean validAdmin = false;
+			
+			// Check for empty fields
+			if (updateAcc.getName().isEmpty() 
+				|| updateAcc.getEmail().isEmpty() 
+				|| updateAcc.getMobileNum() <= 0 
+				|| updateAcc.getPassword().isEmpty()) 
+			{
+				empty = true;
+			}
+	
+			// Check for duplicate email and mobile number
+			for (Account existingAcc : accountList) 
+			{
+				String role = existingAcc.getRole();
+				String existingEmail = existingAcc.getEmail();
+				int existingMobile = existingAcc.getMobileNum();
+				int existingID = existingAcc.getUserID();
+				
+				if(role.equalsIgnoreCase("Student") && existingID == updateAcc.getUserID())
+				{
+					validAdmin = true;
+					
+				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
+							|| existingMobile == updateAcc.getMobileNum()) 
+					{
+						duplicate = true;
+						break;
+					}	
+	
 				// If no duplicate exist
-				else {
-					studentAcc.setName(name);
-					studentAcc.setEmail(email);
-					studentAcc.setMobileNum(mobileNum);
-					studentAcc.setPassword(password);
-					System.out.println("\nStudent account " + studentAcc.getUserID() + " updated.\n");
+				if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
+				{
+						existingAcc.setName(updateAcc.getName());
+						existingAcc.setEmail(updateAcc.getEmail());
+						existingAcc.setMobileNum(updateAcc.getMobileNum());
+						existingAcc.setPassword(updateAcc.getPassword());
+						System.out.println("\nStudent account " + updateAcc.getUserID() + " updated.\n");
+						break;
 				}
-
-				break;
+				}
+			}
+			
+			if (empty) 
+			{
+				System.out.println("\nPlease fill in all account details.\n");
+			}
+			
+			else if(!validUserID)
+			{
+				System.out.println("\nUser ID consists of 8 digits.\n");
+			}
+					
+			else if(!validName)
+			{
+				System.out.println("\nName can only be 45 characters long.");
+			}
+					
+			else if(!validEmail)
+			{
+				System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+			}
+					
+			else if(!validMobile)
+			{
+				System.out.println("\nMobile number consists of 8 digits.\n");
+			}
+			
+			else if(!validAdmin)
+			{
+				System.out.println("\nAccount " + updateAcc.getUserID() + " is not found.\n");
+			}
+					
+			else if(duplicate)
+			{
+				System.out.println("\nDuplicate information exist.\n");
 			}
 		}
-
-		// If user id does not exist
-		if (!studentAccFound) {
-			System.out.println("\nStudent account " + userID + " not found.\n");
-		}
-
 	}
 
 	// ========Administrator Option 3: Maintain Student account (Delete)======== //Saiful
