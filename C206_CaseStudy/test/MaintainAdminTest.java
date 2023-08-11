@@ -35,8 +35,6 @@ public class MaintainAdminTest
 		teacher3 = new Account("Teacher3", 23456432, "password3", "Teacher3@gmail.com", 14234567, "Teacher");
 	
 		accountList = new ArrayList<Account>();
-		
-		
 	}
 
 	@After

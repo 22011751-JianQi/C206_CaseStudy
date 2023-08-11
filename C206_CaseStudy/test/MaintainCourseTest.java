@@ -35,7 +35,6 @@ public class MaintainCourseTest
         
 		courseList = new ArrayList<Course>();
 		accountList = new ArrayList<Account>();
-		
 	}
 
 	@After

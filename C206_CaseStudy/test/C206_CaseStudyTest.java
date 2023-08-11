@@ -32,7 +32,6 @@ public class C206_CaseStudyTest
 	private FeeDetails fd5;
 	private FeeDetails fd6;
 	
-	
 	public C206_CaseStudyTest()
 	{
 		super();

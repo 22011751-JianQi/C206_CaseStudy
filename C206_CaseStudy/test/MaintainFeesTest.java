@@ -34,8 +34,6 @@ public class MaintainFeesTest
 		fd4 = new FeeDetails(22000079,"Exam",300,"14/2/2022","Pending");
 		fd5 = new FeeDetails(12345678,"Others",400,"25/2/2002","Paid");
 		fd6 = new FeeDetails(12345678,"",2000.00,"14/2/2023","Pending");
-		
-		
 	}
 
 	@After
