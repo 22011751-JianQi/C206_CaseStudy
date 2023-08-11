@@ -11,6 +11,7 @@ public class TuitionManagement
 	private static final int Login_Option_Teacher = 2;
 	private static final int Login_Option_Student = 3;
 
+	
 	// ========Administrator menu options(Incomplete)========
 	private static final int Admin_Option_Quit = 10;
 	private static final int Maintain_Admin_Option = 1;
@@ -23,20 +24,34 @@ public class TuitionManagement
 	private static final int View_Student_Performance = 8;
 	private static final int View_Financial_Statitic = 9;
 	
+	
+	//========teacher/student options========
+	private static final int View_Personal_Information = 1;
+	
+	
 	//========Teacher menu options========
+	private static final int View_Assigned_Course = 2;
+	private static final int Teacher_Option_Quit = 3;
 	
-	
+	private static final int Update_Personal_Teacher = 1;
+	private static final int  Return_To_Menu1_Teacher= 2;
 	
 	
 	//========Student menu options========
-	private static final int View_Personal_Information = 1;
+	//Menu 1
 	private static final int Maintain_Enrollment = 2;
 	private static final int Student_Option_Quit = 3;
 	
+	//Menu 2
 	private static final int View_Personal_Fees = 1;
-	private static final int Update_Personal_Information = 2;
+	private static final int Update_Personal_Student = 2;
 	private static final int View_Personal_Attendance = 3;
-	private static final int Retrun_To_Menu1 = 4;
+	private static final int Return_To_Menu1_Student = 4;
+	
+	//Menu 3 - under view personal fees
+	private static final int Make_Payment = 1;
+	private static final int Return_To_Menu2_Student = 2;
+	
 	
 	// ========Maintain menu options========
 	private static final int Quit = 4;
@@ -49,10 +64,10 @@ public class TuitionManagement
 	private static final String des_Pattern = ".{1,40}";
 	private static final String Size_Pattern= "[1-2][0-9]|30";
 	
-	private static final String UserID_Pattern = "\\b\\d{8}\\b";
-	private static final String Name_Pattern = "^.{45}$";
-	private static final String Mobile_Pattern = "\\b\\d{8}\\b";
-	private static final String Email_Pattern = "^[a-zA-Z0-9._-]{1,45}@gmail\\.com$";
+	private static final String UserID_Pattern = "^\\d{8}$";
+	private static final String Name_Pattern = "^.{1,44}$";
+	private static final String Mobile_Pattern = "^\\d{8}$";
+	private static final String Email_Pattern = "^[^\\s@]{1,44}@gmail\\.com$";
 
 	public static void main(String[] args) 
 	{
@@ -239,7 +254,8 @@ public class TuitionManagement
                 addAdmin(accountList, newAdmin);
                 break;
             case Update:
-                updateAdmin(accountList);
+            	Account updateAdminAcc = inputUpdateAcc(accountList);
+                updateAdmin(accountList, updateAdminAcc);
                 break;
             case Delete:
             	int deleteUserID = Helper.readInt("Enter administrator user id for delete > ");
@@ -273,7 +289,8 @@ public class TuitionManagement
 	                addTeacher(accountList, newTeacher);
 	                break;
 	            case Update:
-	                updateTeacher(accountList);
+	            	Account updateTeachAcc = inputUpdateAcc(accountList);
+	                updateTeacher(accountList, updateTeachAcc);
 	                break;
 	            case Delete:
 	                deleteTeacher(accountList);
@@ -400,11 +417,9 @@ public class TuitionManagement
 	
 	//Option 6
 	
-	//Option 7
 	
 	//Option 8
-	
-	//Option 9
+
 	
 	//========Method to handle teacher login========
 	private static void handleTeacherLogin(ArrayList<Account> accountList, ArrayList<Course> courseList) {
@@ -414,7 +429,7 @@ public class TuitionManagement
 	        if (teacherLoginAcct != null) 
 	        {
 	            teachOption = 0; // Reset teachOption for the teacher menu
-	            while (teachOption != 3) {
+	            while (teachOption != Teacher_Option_Quit) {
 	                teacherMenu();
 	                teachOption = Helper.readInt("Enter an option > ");
 
@@ -422,16 +437,18 @@ public class TuitionManagement
 	                {
 	                	//Option 1
 	                	//Go to handleTeacherUpdate method
-	                    case 1:
-	                        handleTeacherUpdate(accountList, teacherLoginAcct); // Call a separate method to handle teacher info
+	                	//View personal info
+	                    case View_Personal_Information:
+	                        viewInfo(teacherLoginAcct);
+	                    	handleTeacherUpdate(accountList, teacherLoginAcct); // Call a separate method to handle teacher info
 	                        break;
 	                        
 	                    //Option 2
-	                    case 2:
+	                    case View_Assigned_Course:
 	                        viewAssignedCourse(courseList, teacherLoginAcct);
 	                        //Maintain attendance method
 	                        break;
-	                    case 3:
+	                    case Teacher_Option_Quit:
 	                        System.out.println("\nReturn to login\n");
 	                        break;
 	                    default:
@@ -455,18 +472,18 @@ public class TuitionManagement
 		while(isRunning)
 		{
 			int teachOption2 = 0;
-		    while (teachOption2 != 2) 
+		    while (teachOption2 != Return_To_Menu1_Teacher) 
 		    {
 		        teacherMenu2();
 		        teachOption2 = Helper.readInt("Enter an Option > ");
 	
 		        switch (teachOption2) 
 		        {
-		            case 1:
+		            case Update_Personal_Teacher:
 		                updatePersonal(accountList, teacherLoginAcct);
 		                viewInfo(teacherLoginAcct);
 		                break;
-		            case 2:
+		            case Return_To_Menu1_Teacher:
 		            	isRunning = false;
 		                System.out.println("\nReturn to Menu\n");
 		                break;
@@ -487,7 +504,7 @@ public class TuitionManagement
 
 	        if (studentLoginAcct != null) 
 	        {
-	            while (studentOption != 3) 
+	            while (studentOption != Student_Option_Quit) 
 	            {
 	                studentMenu();
 	                studentOption = Helper.readInt("Enter an option > ");
@@ -497,17 +514,17 @@ public class TuitionManagement
 	                	// Option 1
 	                	// View personal Info
 	                	// Student menu 2
-	                    case 1:
+	                    case View_Personal_Information:
 	                        viewInfo(studentLoginAcct);
 	                        handleStudentInfo(accountList, feeList, studentLoginAcct);
 	                        break;
 	                        
 	                    //Option 2
 	                    // View enrollment
-	                    case 2:
+	                    case Maintain_Enrollment:
 	                        handleStudentEnrollment(courseList, enrollmentList, studentLoginAcct,feeList);
 	                        break;
-	                    case 3:
+	                    case Student_Option_Quit:
 	                        System.out.println("\nReturn to login\n");
 	                        break;
 	                    default:
@@ -530,7 +547,7 @@ public class TuitionManagement
 		while(isRunning)
 		{
 			int infoUpdateOption = 0;
-		    while (infoUpdateOption != 4) 
+		    while (infoUpdateOption != Return_To_Menu1_Student) 
 		    {
 		        studentMenu2();
 		        infoUpdateOption = Helper.readInt("Enter an Option > ");
@@ -539,24 +556,24 @@ public class TuitionManagement
 		        {
 		        	// Option 1
 		        	// View personal fees
-		            case 1:
+		            case View_Personal_Fees:
 		                viewPersonalFees(feesList, studentLoginAcct);
 		                break;
 		            
 		            //Option 2
 		            // Update personal info
-		            case 2:
+		            case Update_Personal_Student:
 		                updatePersonal(accountList, studentLoginAcct);
 		                viewInfo(studentLoginAcct);
 		                break;
 		            
 		            //Option 3
 		            //View attendance
-		            case 3:
+		            case View_Personal_Attendance:
 		                // Implement viewing attendance if needed
 		                break;
 		                
-		            case 4:
+		            case Return_To_Menu1_Student:
 		            	isRunning = false;
 		                System.out.println("\nReturn to student menu\n");
 		                break;
@@ -575,7 +592,7 @@ public class TuitionManagement
 		while(isRunning)
 		{
 			int enrollmentOption = 0;
-		    while (enrollmentOption != 4) {
+		    while (enrollmentOption != Quit) {
 		        maintainEnrollmentMenu();
 		        enrollmentOption = Helper.readInt("Enter an option > ");
 	
@@ -583,23 +600,23 @@ public class TuitionManagement
 		        {
 		        	//Option 1
 		        	// Add enrollment
-		            case 1:
+		            case Add:
 		                addEnrollment(courseList, enrollmentList, studentLoginAcct,feeList);
 		                break;
 		            
 		            //Option 2
 		            // Update enrollment
-		            case 2:
+		            case Update:
 		                updateEnrollment(courseList, enrollmentList, studentLoginAcct);
 		                break;
 		            
 		            //Option 3
 		            // Delete enrollment
-		            case 3:
+		            case Delete:
 		                deleteEnrollment(enrollmentList, studentLoginAcct);
 		                break;
 		              
-		            case 4:
+		            case Quit:
 		            	isRunning = false;
 		                System.out.println("\nReturn to student menu\n");
 		                break;
@@ -638,10 +655,10 @@ public class TuitionManagement
 		System.out.println("3. View student account");
 		System.out.println("4. View student fees");
 		System.out.println("5. View courses");
-		System.out.println("6. View enrolment statistics (Not done)");
-		System.out.println("7. View fees collection (Not done)");
+		System.out.println("6. View enrollment statistics (Not done)");
+		System.out.println("7. View fees collection");
 		System.out.println("8. View student performance (Not done)");
-		System.out.println("9. View financial statistics (Not doen)");
+		System.out.println("9. View financial statistics");
 		System.out.println("10. Return");
 		Helper.line(80, "-");
 	}
@@ -769,6 +786,7 @@ public class TuitionManagement
 		return null;
 	}
 
+	//JianQi
 	// ========Student login validation========
 	public static Account validateStudent(ArrayList<Account> accountList) {
 		int inputUserID = Helper.readInt("Enter Student user ID > ");
@@ -785,7 +803,7 @@ public class TuitionManagement
 	}
 
 	
-	
+	//JianQi
 	//========Display personal info (student/teacher)========
 	public static void viewInfo(Account acc)
 	{
@@ -795,6 +813,7 @@ public class TuitionManagement
 		System.out.println(output);
 	}
 	
+	//JianQi
 	//========Update personal info (student/teacher)========
 	public static void updatePersonal(ArrayList<Account> accountList, Account acc)
 	{
@@ -854,7 +873,8 @@ public class TuitionManagement
 	
 	//JianQi
 	// ========Maintain account input========
-	public static Account inputAccount() {
+	public static Account inputAccount() 
+	{
 		String name = Helper.readString("Enter account name > ");
 		int userID = Helper.readInt("Enter account user id > ");
 		String email = Helper.readString("Enter account email > ");
@@ -866,7 +886,35 @@ public class TuitionManagement
 	}
 
 	//JianQi
+	//========update admin account input========
+	public static Account inputUpdateAcc(ArrayList<Account> accountList)
+	{
+		int updateUserID = Helper.readInt("Enter user id to update account > ");
+		
+		Account updateAcc = null;
+		
+		//Check for valid ID
+		for(Account existingAcc : accountList)
+		{
+			int existingID = existingAcc.getUserID();
+			
+			if(existingID == updateUserID)
+			{
+				String newName = Helper.readString("Enter new name > ");
+				String newEmail = Helper.readString("Enter new email > ");
+				int newMobileNum = Helper.readInt("Enter new mobile number > ");
+				String newPassword = Helper.readString("Enter new password > ");
+				
+				updateAcc = new Account(newName, existingID, newPassword, newEmail, newMobileNum, "");
+				break;
+			}
+		}	
+		return updateAcc;
+	}
+	
+	//JianQi
 	// ========Administrator option 1: Maintain user account (View)========
+	
 	public static String retriveAllUsers(ArrayList<Account> accountList) {
 		String output = "";
 
@@ -879,128 +927,201 @@ public class TuitionManagement
 		}
 		return output;
 	}
+	
 
 	public static void viewAdminAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Administrator accounts");
 
-		String output = String.format("%-10s %-30s %-10s %-15s %-10s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
+		String output = String.format("%-10s %-15s %-25s %-12s %-10s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
 
 		output += retriveAllUsers(accountList);
 		System.out.println(output);
 	}
+	
 
 	//JianQi
 	// ======== Administrator option 1: Maintain user account(Add)========
-	public static void addAdmin(ArrayList<Account> accountList, Account acc) {
-		Account account;
-		boolean duplicate = false;
+	public static void addAdmin(ArrayList<Account> accountList, Account acc) 
+	{
 		boolean empty = false;
-		boolean validID = String.valueOf(acc.getUserID()).matches(UserID_Pattern);
+		boolean duplicate = false;
+		boolean validUserID =  false;
+		boolean validName = false;
+		boolean validEmail = false;
+		boolean validMobile = false;
 		
-		if(validID)
-		{
-			// Check for empty fields
-			if ((acc.getName()).isEmpty() || acc.getUserID() <= 0 || (acc.getEmail()).isEmpty() || acc.getMobileNum() <= 0
-					|| (acc.getPassword()).isEmpty()) {
+	
+		// Check for empty fields
+			if ((acc.getName()).isEmpty() 
+					|| acc.getUserID() <= 0 
+					|| (acc.getEmail()).isEmpty() 
+					|| acc.getMobileNum() <= 0
+					|| (acc.getPassword()).isEmpty()) 
+			{
 				empty = true;
 			}
-	
-			else {
-				for (int i = 0; i < accountList.size(); i++) {
-					account = accountList.get(i);
-	
-					if (account.getUserID() == acc.getUserID() || (account.getEmail()).equalsIgnoreCase(acc.getEmail())
-							|| account.getMobileNum() == acc.getMobileNum()) {
-						duplicate = true;
-						break;
+		
+			else 
+			{
+				validUserID =  String.valueOf(acc.getUserID()).matches(UserID_Pattern);
+				validName = Pattern.matches(Name_Pattern, acc.getName());
+				validEmail = Pattern.matches(Email_Pattern, acc.getEmail());
+				validMobile = String.valueOf(acc.getMobileNum()).matches(Mobile_Pattern);
+				
+				if(validUserID && validName && validEmail && validMobile)
+				{
+					for(int i = 0; i < accountList.size(); i++)
+					{
+						int existingUserID = accountList.get(i).getUserID();
+						String existingEmail = accountList.get(i).getEmail();
+						int existingMobile = accountList.get(i).getMobileNum();
+					
+						//Check duplicate
+						if(acc.getUserID() == existingUserID 
+								|| acc.getEmail().equalsIgnoreCase(existingEmail) 
+								|| acc.getMobileNum() == existingMobile)
+						{
+							duplicate = true;
+							break;
+							
+						}
 					}
 				}
+				
 			}
-	
-			if (empty == true) {
+		
+			if (empty == true) 
+			{
 				System.out.println("\nPlease fill in all account details.\n");
-			} else if (duplicate == true) {
-				System.out.println("\nUser id, email or mobile number already exist.\n");
-			} else {
+			} 
+			
+			else if(!validUserID)
+			{
+				System.out.println("\nUser ID consists of 8 digits.\n");
+			}
+			
+			else if(!validName)
+			{
+				System.out.println("\nName can only be 45 characters long.");
+			}
+			
+			else if(!validEmail)
+			{
+				System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+			}
+			
+			else if(!validMobile)
+			{
+				System.out.println("\nMobile number consists of 8 digits.\n");
+			}
+			
+			else if(duplicate)
+			{
+				System.out.println("\nDuplicate information exist.\n");
+			}
+				
+			else 
+			{
 				acc.setRole("Admin");
 				accountList.add(acc);
 				System.out.println("\nUser account " + acc.getUserID() + " successfully created.\n");
 			}
-		}
-		else
-		{
-			System.out.println("\nInvalid user id.\n");
-		}
-
-
 	}
-
+	
 	//JianQi
 	// ========Administrator option 1: Maintain user account (Update)========
-	public static void updateAdmin(ArrayList<Account> accountList) {
-		// Check if account exist
-		boolean adminAccFound = false;
-
-		int userID = Helper.readInt("Enter administrator user id for update > ");
-
-		for (int i = 0; i < accountList.size(); i++) {
-			Account adminAcc = accountList.get(i);
-
-			if (adminAcc.getUserID() == userID && adminAcc.getRole().equalsIgnoreCase("Admin")) {
-				adminAccFound = true;
-
-				String name = Helper.readString("Enter administrator name > ");
-				String email = Helper.readString("Enter administrator email > ");
-				int mobileNum = Helper.readInt("Enter administrator mobile number > ");
-				String password = Helper.readString("Enter administrator password > ");
-
-				// Check for empty fields
-				// Check for duplicate email and mobile number
-				boolean empty = false;
-				boolean duplicate = false;
-
-				if (name.isEmpty() || email.isEmpty() || mobileNum <= 0 || password.isEmpty()) {
-					empty = true;
-				}
-
-				else {
-					for (Account existingAdmin : accountList) {
-						if (existingAdmin != adminAcc) {
-							if (existingAdmin.getEmail().equalsIgnoreCase(email)
-									|| existingAdmin.getMobileNum() == mobileNum) {
-								duplicate = true;
-								break;
-							}
-						}
-					}
-				}
-
-				if (empty == true) {
-					System.out.println("\nPlease fill in all account details.\n");
-				}
-				// Error message when email or mobile already exist
-				else if (duplicate == true) {
-					System.out.println("\nEmail or mobile number already exists. Admin account not updated.\n");
-				}
-
+	public static void updateAdmin(ArrayList<Account> accountList, Account updateAcc) 
+	{
+		if(updateAcc != null)
+		{
+			boolean validUserID =  String.valueOf(updateAcc.getUserID()).matches(UserID_Pattern);
+			boolean validName = Pattern.matches(Name_Pattern, updateAcc.getName());
+			boolean validEmail = Pattern.matches(Email_Pattern, updateAcc.getEmail());
+			boolean validMobile = String.valueOf(updateAcc.getMobileNum()).matches(Mobile_Pattern);
+			
+			boolean duplicate = false;
+			boolean empty = false;
+			boolean validAdmin = false;
+			
+			// Check for empty fields
+			if (updateAcc.getName().isEmpty() 
+				|| updateAcc.getEmail().isEmpty() 
+				|| updateAcc.getMobileNum() <= 0 
+				|| updateAcc.getPassword().isEmpty()) 
+			{
+				empty = true;
+			}
+	
+	
+			// Check for duplicate email and mobile number
+			for (Account existingAcc : accountList) 
+			{
+				String role = existingAcc.getRole();
+				String existingEmail = existingAcc.getEmail();
+				int existingMobile = existingAcc.getMobileNum();
+				int existingID = existingAcc.getUserID();
+				
+				if(role.equalsIgnoreCase("Admin") && existingID == updateAcc.getUserID())
+				{
+					validAdmin = true;
+					
+				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
+							|| existingMobile == updateAcc.getMobileNum()) 
+					{
+						duplicate = true;
+						break;
+					}	
+	
 				// If no duplicate exist
-				else {
-					adminAcc.setName(name);
-					adminAcc.setEmail(email);
-					adminAcc.setMobileNum(mobileNum);
-					adminAcc.setPassword(password);
-					System.out.println("\nAdministrator account " + adminAcc.getUserID() + " updated.\n");
+				if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
+				{
+						existingAcc.setName(updateAcc.getName());
+						existingAcc.setEmail(updateAcc.getEmail());
+						existingAcc.setMobileNum(updateAcc.getMobileNum());
+						existingAcc.setPassword(updateAcc.getPassword());
+						System.out.println("\nAdministrator account " + updateAcc.getUserID() + " updated.\n");
+						break;
 				}
-
-				break;
+				}
+			}
+			
+			if (empty) 
+			{
+				System.out.println("\nPlease fill in all account details.\n");
+			}
+			
+			else if(!validUserID)
+			{
+				System.out.println("\nUser ID consists of 8 digits.\n");
+			}
+					
+			else if(!validName)
+			{
+				System.out.println("\nName can only be 45 characters long.");
+			}
+					
+			else if(!validEmail)
+			{
+				System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+			}
+					
+			else if(!validMobile)
+			{
+				System.out.println("\nMobile number consists of 8 digits.\n");
+			}
+			
+			else if(!validAdmin)
+			{
+				System.out.println("\nAccount " + updateAcc.getUserID() + " is not found.\n");
+			}
+					
+			else if(duplicate)
+			{
+				System.out.println("\nDuplicate information exist.\n");
 			}
 		}
-
-		// If user id does not exist
-		if (!adminAccFound) {
-			System.out.println("\nAdministator account " + userID + " not found.\n");
-		}
 	}
+	
 
 	//JianQi
 	// ========Administrator Option 1: Maintain user account (Delete)========
@@ -1044,7 +1165,7 @@ public class TuitionManagement
 	public static void viewTeachAcc(ArrayList<Account> accountList) {
 		TuitionManagement.setHeader("Teacher accounts");
 
-		String output = String.format("%s %s %s %s %s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
+		String output = String.format("%-10s %-15s %-25s %-12s %-10s\n", "Name", "User ID", "Email", "Mobile Num", "Password");
 
 		output += retriveAllTeachers(accountList);
 		System.out.println(output);
@@ -1052,103 +1173,183 @@ public class TuitionManagement
 
 	//JianQi
 	// ========Administrator Option 2: Maintain teacher account (Add)========
-	public static void addTeacher(ArrayList<Account> accountList, Account acc) {
-		Account account;
-		boolean duplicate = false;
+	public static void addTeacher(ArrayList<Account> accountList, Account acc) 
+	{
 		boolean empty = false;
-
+		boolean duplicate = false;
+		boolean validUserID =  false;
+		boolean validName = false;
+		boolean validEmail = false;
+		boolean validMobile = false;
+		
+	
 		// Check for empty fields
-		if ((acc.getName()).isEmpty() || acc.getUserID() <= 0 || (acc.getEmail()).isEmpty() || acc.getMobileNum() <= 0
-				|| (acc.getPassword()).isEmpty()) {
-			empty = true;
-		}
-
-		else {
-			for (int i = 0; i < accountList.size(); i++) {
-				account = accountList.get(i);
-
-				if (account.getUserID() == acc.getUserID() || (account.getEmail()).equalsIgnoreCase(acc.getEmail())
-						|| account.getMobileNum() == acc.getMobileNum()) {
-					duplicate = true;
-					break;
-				}
+			if ((acc.getName()).isEmpty() 
+					|| acc.getUserID() <= 0 
+					|| (acc.getEmail()).isEmpty() 
+					|| acc.getMobileNum() <= 0
+					|| (acc.getPassword()).isEmpty()) 
+			{
+				empty = true;
 			}
-		}
-
-		if (empty == true) {
-			System.out.println("\nPlease fill in all account details.\n");
-		} else if (duplicate == true) {
-			System.out.println("\nUser id, email or mobile number already exist.\n");
-		} else {
-			acc.setRole("Teacher");
-			accountList.add(acc);
-		}
-	}
-
-	//JianQi
-	// ========Administrator Option 2: Maintain teacher account (Update)========
-	public static void updateTeacher(ArrayList<Account> accountList) {
-		// Check if account exist
-		boolean teacherAccFound = false;
-
-		int userID = Helper.readInt("Enter teacher user id for update > ");
-
-		for (int i = 0; i < accountList.size(); i++) {
-			Account teacherAcc = accountList.get(i);
-
-			if (teacherAcc.getUserID() == userID && teacherAcc.getRole().equalsIgnoreCase("Teacher")) {
-				teacherAccFound = true;
-
-				String name = Helper.readString("Enter teacher name > ");
-				String email = Helper.readString("Enter teacher email > ");
-				int mobileNum = Helper.readInt("Enter teacher mobile number > ");
-				String password = Helper.readString("Enter teacher password > ");
-
-				// Check for empty fields
-				// Check for duplicate email and mobile number
-				boolean empty = false;
-				boolean duplicate = false;
-
-				if (name.isEmpty() || email.isEmpty() || mobileNum <= 0 || password.isEmpty()) {
-					empty = true;
-				}
-
-				else {
-					for (Account existingTeacher : accountList) {
-						if (existingTeacher != teacherAcc) {
-							if (existingTeacher.getEmail().equalsIgnoreCase(email)
-									|| existingTeacher.getMobileNum() == mobileNum) {
-								duplicate = true;
-								break;
-							}
+		
+			else 
+			{
+				validUserID =  String.valueOf(acc.getUserID()).matches(UserID_Pattern);
+				validName = Pattern.matches(Name_Pattern, acc.getName());
+				validEmail = Pattern.matches(Email_Pattern, acc.getEmail());
+				validMobile = String.valueOf(acc.getMobileNum()).matches(Mobile_Pattern);
+				
+				if(validUserID && validName && validEmail && validMobile)
+				{
+					for(int i = 0; i < accountList.size(); i++)
+					{
+						int existingUserID = accountList.get(i).getUserID();
+						String existingEmail = accountList.get(i).getEmail();
+						int existingMobile = accountList.get(i).getMobileNum();
+					
+						//Check duplicate
+						if(acc.getUserID() == existingUserID 
+								|| acc.getEmail().equalsIgnoreCase(existingEmail) 
+								|| acc.getMobileNum() == existingMobile)
+						{
+							duplicate = true;
+							break;
+							
 						}
 					}
 				}
-
-				if (empty == true) {
-					System.out.println("\nPlease fill in all account details.\n");
-				}
-				// Error message when email or mobile already exist
-				else if (duplicate == true) {
-					System.out.println("\nEmail or mobile number already exists. Teacher account not updated.\n");
-				}
-
-				// If no duplicate exist
-				else {
-					teacherAcc.setName(name);
-					teacherAcc.setEmail(email);
-					teacherAcc.setMobileNum(mobileNum);
-					teacherAcc.setPassword(password);
-					System.out.println("\nTeacher account " + teacherAcc.getUserID() + " updated.\n");
-				}
-
-				break;
+				
+			}
+		
+			if (empty == true) 
+			{
+				System.out.println("\nPlease fill in all account details.\n");
+			} 
+			
+			else if(!validUserID)
+			{
+				System.out.println("\nUser ID consists of 8 digits.\n");
+			}
+			
+			else if(!validName)
+			{
+				System.out.println("\nName can only be 45 characters long.");
+			}
+			
+			else if(!validEmail)
+			{
+				System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+			}
+			
+			else if(!validMobile)
+			{
+				System.out.println("\nMobile number consists of 8 digits.\n");
+			}
+			
+			else if(duplicate)
+			{
+				System.out.println("\nDuplicate information exist.\n");
+			}
+				
+			else 
+			{
+				acc.setRole("Teacher");
+				accountList.add(acc);
+				System.out.println("\nUser account " + acc.getUserID() + " successfully created.\n");
 			}
 		}
-
-		// If user id does not exist
-		if (!teacherAccFound) {
-			System.out.println("\nTeacher account " + userID + " not found.\n");
+	
+	//JianQi
+	// ========Administrator Option 2: Maintain teacher account (Update)========
+	public static void updateTeacher(ArrayList<Account> accountList, Account updateAcc) {
+		if(updateAcc != null)
+		{
+			boolean validUserID =  String.valueOf(updateAcc.getUserID()).matches(UserID_Pattern);
+			boolean validName = Pattern.matches(Name_Pattern, updateAcc.getName());
+			boolean validEmail = Pattern.matches(Email_Pattern, updateAcc.getEmail());
+			boolean validMobile = String.valueOf(updateAcc.getMobileNum()).matches(Mobile_Pattern);
+			
+			boolean duplicate = false;
+			boolean empty = false;
+			boolean validAdmin = false;
+			
+			// Check for empty fields
+			if (updateAcc.getName().isEmpty() 
+				|| updateAcc.getEmail().isEmpty() 
+				|| updateAcc.getMobileNum() <= 0 
+				|| updateAcc.getPassword().isEmpty()) 
+			{
+				empty = true;
+			}
+	
+	
+			// Check for duplicate email and mobile number
+			for (Account existingAcc : accountList) 
+			{
+				String role = existingAcc.getRole();
+				String existingEmail = existingAcc.getEmail();
+				int existingMobile = existingAcc.getMobileNum();
+				int existingID = existingAcc.getUserID();
+				
+				if(role.equalsIgnoreCase("Admin") && existingID == updateAcc.getUserID())
+				{
+					validAdmin = true;
+					
+				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
+							|| existingMobile == updateAcc.getMobileNum()) 
+					{
+						duplicate = true;
+						break;
+					}	
+	
+				// If no duplicate exist
+				if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
+				{
+						existingAcc.setName(updateAcc.getName());
+						existingAcc.setEmail(updateAcc.getEmail());
+						existingAcc.setMobileNum(updateAcc.getMobileNum());
+						existingAcc.setPassword(updateAcc.getPassword());
+						System.out.println("\nAdministrator account " + updateAcc.getUserID() + " updated.\n");
+						break;
+				}
+				}
+			}
+			
+			if (empty) 
+			{
+				System.out.println("\nPlease fill in all account details.\n");
+			}
+			
+			else if(!validUserID)
+			{
+				System.out.println("\nUser ID consists of 8 digits.\n");
+			}
+					
+			else if(!validName)
+			{
+				System.out.println("\nName can only be 45 characters long.");
+			}
+					
+			else if(!validEmail)
+			{
+				System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+			}
+					
+			else if(!validMobile)
+			{
+				System.out.println("\nMobile number consists of 8 digits.\n");
+			}
+			
+			else if(!validAdmin)
+			{
+				System.out.println("\nAccount " + updateAcc.getUserID() + " is not found.\n");
+			}
+					
+			else if(duplicate)
+			{
+				System.out.println("\nDuplicate information exist.\n");
+			}
 		}
 	}
 
@@ -1325,7 +1526,7 @@ public class TuitionManagement
 		}
 	}
 	
-	
+	//Adrian
 	//========Administrator Option 4: Maintain Fees (View)========
 	public static String retrieveAllFees(ArrayList<FeeDetails> feeList) 
 	{
@@ -1346,6 +1547,7 @@ public class TuitionManagement
 		System.out.println(output);
 	}
 	
+	//Adrain
 	//========Administrator Option 4: Maintain Fees (Add - Do after enrollment)========
 	public static FeeDetails inputFee() {
 		int id = Helper.readInt("Enter the student ID: ");
@@ -1373,6 +1575,7 @@ public class TuitionManagement
 		feeList.add(newfee);
 	}
 
+	//Adrian
 	//========Administrator Option 4: Maintain Fees (Update)========
 	public static boolean doUpdateFees(ArrayList<FeeDetails> feeList, int id, String type, double price, String dueDate, String paymentStatus) {
 		boolean isUpdated = false;
@@ -1406,6 +1609,7 @@ public class TuitionManagement
 		}
 	}
 
+	//Adrian
 	//========Administrator Option 4: Maintain Fees (Delete)========
 	public static boolean doDeleteFee(ArrayList<FeeDetails> feeList,FeeDetails newFee) {
 		boolean isDeleted = false;
@@ -1435,7 +1639,7 @@ public class TuitionManagement
 	}
 
 	
-	
+	//Xing Rong
 	// ========Administrator Option 5: Maintain course (View)========
 	public static String retrieveAllCourse(ArrayList<Course> courseList) {
 		String output = "";
@@ -1460,7 +1664,8 @@ public class TuitionManagement
 		
 		System.out.println(output);
 	}
-
+	
+	//Xing Rong
 	// ========Administrator Option 5: Maintain courses (Add)========
 	public static Course inputCourse(ArrayList<Course> courseList) {
 		TuitionManagement.setHeader("ADD COURSE");
@@ -1544,6 +1749,7 @@ public class TuitionManagement
 
 	}
 
+	//Xing Rong
 	// ========Administrator Option 5: Maintain courses (Update)========
 	public static Course inputUpdateCourse(ArrayList<Course> courseList) {
 		String courseId = Helper.readString("Enter course id to update course > ");
@@ -1623,6 +1829,7 @@ public class TuitionManagement
 
 	}
 
+	//Xing Rong
 	// ========Administrator Option 5: Maintain courses (Delete)========
 	public static void deleteCourse(ArrayList<Course> courseList, String courseId) {
 		for (int i = 0; i < courseList.size(); i++) {
@@ -1637,6 +1844,8 @@ public class TuitionManagement
 		System.out.println("Course ID " + courseId + " not found.");
 	}
 
+	
+	//Adrian
 	//========Administrator option 7: View Fee Collection========
 		public static String retrieveFeesCollection(ArrayList<FeeDetails> feeList) {
 			String output = "";
@@ -1662,6 +1871,7 @@ public class TuitionManagement
 			System.out.println(output);
 		}
 		
+		//Adrain
 		//========Administrator option 9: View Financial Statistics========
 		public static void viewFinancialStatistics(ArrayList<FeeDetails> feeList, ArrayList<Course> courseList) {
 			double revenue = 0;
@@ -1721,7 +1931,7 @@ public class TuitionManagement
 	//========Student Functions========
 	
 	
-	
+	//Adrian
 	//========Student Option 1: View Student fees========
 	public static String retrivePersonalFees(ArrayList<FeeDetails> feesList, Account acc)
 	{
@@ -1755,12 +1965,22 @@ public class TuitionManagement
 		System.out.println(output);
 		studentMenu3();
 		paymentOption = Helper.readInt("Enter an option > ");
-		if(paymentOption == 1) {
+		if(paymentOption == Make_Payment) {
 			makePayment(feesList,acc);
-		} else if (paymentOption > 3) {
-			System.out.println("Invalid Option");
+		} 
+		
+		else if(paymentOption == Return_To_Menu2_Student)
+		{
+			System.out.println("\nReturn to menu 2.\n");
+		}
+		
+		else 
+		{
+			System.out.println("\nInvalid Option.\n");
 		}
 	}
+	
+	//Adrain
 	//========Student Option 1: Make Payment========
 		public static boolean doMakePayment(ArrayList<FeeDetails> feeList,  int id, String type, String dueDate) {
 			boolean isUpdated = false;
@@ -1783,16 +2003,15 @@ public class TuitionManagement
 			String duedate = Helper.readString("Enter the fee due date (dd/mm/yyyy): ");
 			Boolean isUpdated = doMakePayment(feeList,id,type,duedate);
 			if (!isUpdated) {
-				System.out.println("Invalid input");
+				System.out.println("\nInvalid input.\n");
 			} else {
-				System.out.println("Paid Successfully");
+				System.out.println("\nPaid Successfully.\n");
 			}
 		}
 		
-	//========Student Option 1: View student attendance========
 
 	
-	
+	//Hamzah
 	//========Student Option 2: Maintain enrollment (View)========
 	public static String retriveEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc)
 	{	
@@ -1819,6 +2038,7 @@ public class TuitionManagement
 		System.out.println(output);
 	}
 	
+	//Hamzah
 	//========Student Option 2: Maintain enrollment (Add)======== 
 	public static void addEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account acc,ArrayList<FeeDetails> feeList)
 	{
@@ -1897,6 +2117,7 @@ public class TuitionManagement
 		}
 	}
 
+	//Hamzah
 	//========Student Option 2: Maintain enrollment (update)========
 	public static void updateEnrollment(ArrayList<Course> courseList, ArrayList<CourseEnroll> enrollmentList, Account acc)
 	{
@@ -1971,6 +2192,7 @@ public class TuitionManagement
 	    }
 	}
 	
+	//Hamzah
 	//========Student Option 2: Maintain enrollment (delete)========
 	public static void deleteEnrollment(ArrayList<CourseEnroll> enrollmentList, Account acc)
 	{
