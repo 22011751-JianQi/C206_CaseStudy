@@ -47,62 +47,69 @@ public class MaintainStudentTest
 
 	}
 	
-	public void testAddStudent() //Saiful
-    {
-    	// accountlist is not null, so that can add a new item - boundary
-        assertNotNull("Check if there is valid Student arraylist to add to", accountList);
-//        Given an empty list, after adding 1 item, the size of the list is 1 - normal
-//        The Student just added is as same as the first user, of the list
-        TuitionManagement.addStudent(accountList, student2);
-        assertEquals("Check that Student arraylist size is 1", 1, accountList.size());
-        assertSame("Check that student is added", student2, accountList.get(0));
+	   @Test
+	    public void testAddStudent() //Saiful
+	    {
+	    	// accountlist is not null, so that can add a new item - boundary
+	        assertNotNull("Check if there is valid Student arraylist to add to", accountList);
+//	        Given an empty list, after adding 1 item, the size of the list is 1 - normal
+//	        The Student just added is as same as the first user, of the list
+	        TuitionManagement.addStudent(accountList, student2);
+	        assertEquals("Check that Student arraylist size is 1", 1, accountList.size());
+	        assertSame("Check that student is added", student2, accountList.get(0));
 
-        
-        //Add another student. test The size of the list is 2? -normal
-        //The item just added is as same as the second item of the list
-        TuitionManagement.addStudent(accountList, student3);
-        assertEquals("Check that student arraylist size is 2", 2, accountList.size());
-        assertSame("Check that student is added", student3, accountList.get(1));
+	        
+	        //Add another student. test The size of the list is 2? -normal
+	        //The item just added is as same as the second item of the list
+	        TuitionManagement.addStudent(accountList, student3);
+	        assertEquals("Check that student arraylist size is 2", 2, accountList.size());
+	        assertSame("Check that student is added", student3, accountList.get(1));
 
-        //Testing for duplicate student
-        Account duplicateStudent = new Account("Student2", 22222222, "12345", "Student2@gmail.com", 22000000, "Student");
-        TuitionManagement.addStudent(accountList, duplicateStudent);
-        assertEquals("Check that the duplicate student is not added", 2, accountList.size());
-      
-        System.out.println("The account list is:");
-        for (Account account : accountList) {
-            System.out.println(account);
-        }
+	        //Testing for duplicate student
+	        Account duplicateStudent = new Account("Student2", 22222222, "12345", "Student2@gmail.com", 22000000, "Student");
+	        TuitionManagement.addStudent(accountList, duplicateStudent);
+	        assertEquals("Check that the duplicate student is not added", 2, accountList.size());
+	      
+	        System.out.println("The account list is:");
+	        for (Account account : accountList) {
+	            System.out.println(account);
+	        }
 
-    }
-    
-   @Test
-    public void testViewStudent() { //Saiful
-    	// Create an empty AccountList object.
+	    }
+	    
+	   @Test
+	    public void testViewStudent() { //Saiful
+	    	// Create an empty AccountList object.
 
-//    	
-		// Test that output is empty when no student is added
-		String allStudent = TuitionManagement.retriveAllStudents(accountList);
-		String testOutput = "";
-		assertEquals("Test that the retrieved accountList is empty?", testOutput, allStudent);
+//	    	
+			// Test that output is empty when no student is added
+			String allStudent = TuitionManagement.retriveAllStudents(accountList);
+			String testOutput = "";
+			assertEquals("Test that the retrieved accountList is empty?", testOutput, allStudent);
 
-		// Test that added account is displayed
-		TuitionManagement.addStudent(accountList, student2);
-		TuitionManagement.addStudent(accountList, student3);
+			// Test that added account is displayed
+			TuitionManagement.addStudent(accountList, student2);
+			TuitionManagement.addStudent(accountList, student3);
 
-		allStudent = TuitionManagement.retriveAllStudents(accountList);
-		testOutput = String.format("%-84s\n", accountList.get(0).toString());
-		testOutput += String.format("%-84s\n", accountList.get(1).toString());
+			allStudent = TuitionManagement.retriveAllStudents(accountList);
+			testOutput = String.format("%-84s\n", accountList.get(0).toString());
+			testOutput += String.format("%-84s\n", accountList.get(1).toString());
 
-		assertEquals("Test that the retrieved accountList is empty?", testOutput, allStudent);
-//		
-		// Test only the students in the list can only be displayed
-		TuitionManagement.addAdmin(accountList, admin3);
-		assertEquals("Test that the retrieved accountList is empty?", testOutput, allStudent);
-	
+			assertEquals("Test that the retrieved accountList is empty?", testOutput, allStudent);
+//			
+			// Test only the students in the list can only be displayed
+			TuitionManagement.addAdmin(accountList, admin3);
+			assertEquals("Test that the retrieved accountList is empty?", testOutput, allStudent);
 
-    }
-    
+
+
+//			
+//	        System.out.println("The account list is:");
+//	        for (Account account : accountList) {
+//	            System.out.println(account);
+//	        }
+	    }
+	    
    @Test
    public void testDeleteStudent() { //Saiful
 
