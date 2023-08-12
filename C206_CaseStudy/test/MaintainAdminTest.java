@@ -17,8 +17,6 @@ public class MaintainAdminTest
 
 	private ArrayList<Account> accountList;
 
-	
-	
 	public MaintainAdminTest()
 	{
 		super();
@@ -82,15 +80,14 @@ public class MaintainAdminTest
 		assertEquals("Check that Account arrayList size is 0", 0, accountList.size());
 		
 		//Test delete invalid account user id
-		TuitionManagement.addTeacher(accountList, teacher3);
-		TuitionManagement.deleteAdmin(accountList, teacher3.getUserID());
-		assertEquals("Check that teacher account is not deleted and arrayList size is 1", 1, accountList.size());
+		TuitionManagement.addAdmin(accountList, admin4);
+		TuitionManagement.deleteAdmin(accountList, 1234);
+		assertEquals("Check that admin3 account is not deleted and arrayList size is 1", 1, accountList.size());
 		
 		//Test delete valid account that is not an administrator
 		TuitionManagement.addTeacher(accountList, teacher3);
 		TuitionManagement.deleteAdmin(accountList, teacher3.getUserID());
-		assertEquals("Check that teacher3 is still in the list", teacher3.getUserID(), accountList.get(0).getUserID());
-		
+		assertEquals("Check that teacher3 is still in the list", teacher3.getUserID(), accountList.get(1).getUserID());
 	}
 	
 	//JianQi

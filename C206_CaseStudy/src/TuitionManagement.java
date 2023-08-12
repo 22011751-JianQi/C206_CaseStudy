@@ -292,7 +292,8 @@ public class TuitionManagement
 	                updateTeacher(accountList, updateTeachAcc);
 	                break;
 	            case Delete:
-	                deleteTeacher(accountList);
+	            	int deleteUserID = Helper.readInt("Enter teacher user id for delete > " );
+	                deleteTeacher(accountList, deleteUserID);
 	                break;
 	            case Quit:
 	                isRunning = false;
@@ -481,7 +482,8 @@ public class TuitionManagement
 		        switch (teachOption2) 
 		        {
 		            case Update_Personal_Teacher:
-		                updatePersonal(accountList, teacherLoginAcct);
+		            	Account updateAcc = inputUpdatePersonal(accountList, teacherLoginAcct);
+		                updatePersonal(accountList, updateAcc);
 		                viewInfo(teacherLoginAcct);
 		                break;
 		            case Return_To_Menu1_Teacher:
@@ -564,7 +566,8 @@ public class TuitionManagement
 		            //Option 2
 		            // Update personal info
 		            case Update_Personal_Student:
-		                updatePersonal(accountList, studentLoginAcct);
+		            	Account updateAcc = inputUpdatePersonal(accountList, studentLoginAcct);
+		                updatePersonal(accountList, updateAcc);
 		                viewInfo(studentLoginAcct);
 		                break;
 		            
@@ -656,9 +659,9 @@ public class TuitionManagement
 		System.out.println("3. View student account");
 		System.out.println("4. View student fees");
 		System.out.println("5. View courses");
-		System.out.println("6. View enrollment statistics (Not done)");
+		System.out.println("6. View enrollment statistics (Not coded)");
 		System.out.println("7. View fees collection");
-		System.out.println("8. View student performance (Not done)");
+		System.out.println("8. View student performance (Not coded)");
 		System.out.println("9. View financial statistics");
 		System.out.println("10. Return");
 		Helper.line(80, "-");
@@ -814,63 +817,104 @@ public class TuitionManagement
 		System.out.println(output);
 	}
 	
+	public static Account inputUpdatePersonal(ArrayList<Account> accountList, Account updateAcc)
+	{
+		Account updatePersonalAcc = null;
+		
+		for(Account existingAcc : accountList)
+		{
+			if(existingAcc.getUserID() == updateAcc.getUserID())
+			{
+				String newName = Helper.readString("Enter new name > ");
+				String newEmail = Helper.readString("Enter new email > ");
+				int newMobileNum = Helper.readInt("Enter new mobile number > ");
+				String newPassword = Helper.readString("Enter new password > ");
+				
+				updatePersonalAcc = new Account(newName, updateAcc.getUserID(), newPassword, newEmail, newMobileNum, updateAcc.getRole());
+				break;
+			}
+		}
+		
+
+		return updatePersonalAcc;
+	}
+	
 	//JianQi
 	//========Update personal info (student/teacher)========
-	public static void updatePersonal(ArrayList<Account> accountList, Account acc)
+	public static void updatePersonal(ArrayList<Account> accountList, Account updateAcc)
 	{
-		setHeader("Update Personal Information");
+		boolean validName = Pattern.matches(Name_Pattern, updateAcc.getName());
+		boolean validEmail = Pattern.matches(Email_Pattern, updateAcc.getEmail());
+		boolean validMobile = String.valueOf(updateAcc.getMobileNum()).matches(Mobile_Pattern);
 		
-		String name = Helper.readString("Enter new name > ");
-		String email = Helper.readString("Enter new email > ");
-		int mobileNum = Helper.readInt("Enter new mobile number > ");
-		String password = Helper.readString("Enter new password > ");
-		
-		// Check for empty fields
-		// Check for duplicate email and mobile number
 		boolean empty = false;
 		boolean duplicate = false;
 
-		if (name.isEmpty() || email.isEmpty() || mobileNum <= 0 || password.isEmpty()) {
+		// Check for empty fields
+		if (updateAcc.getName().isEmpty() 
+				|| updateAcc.getEmail().isEmpty() 
+				|| updateAcc.getMobileNum() <= 0 
+				|| updateAcc.getPassword().isEmpty()) 
+		{
 			empty = true;
 		}
 
+		// if no empty check for duplicate information
+		// check between administrator, teacher and student
 		else {
-			for (Account existingAcc : accountList) {
-				if (existingAcc != acc) {
-					if (existingAcc.getEmail().equalsIgnoreCase(email)
-							|| existingAcc.getMobileNum() == mobileNum) {
-						duplicate = true;
+			for (Account existingAcc : accountList) 
+			{
+				String existingEmail = existingAcc.getEmail();
+				int existingMobileNum = existingAcc.getMobileNum();
+				
+				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
+						|| existingMobileNum == updateAcc.getMobileNum()) 
+				{
+					duplicate = true;
+					break;
+				}
+				
+				//Ensure that only personal account is updated.
+				if(existingAcc.getUserID() == updateAcc.getUserID())
+				{
+					if(validName && validEmail && validMobile && duplicate == false && empty == false)
+					{
+						existingAcc.setName(updateAcc.getName());
+						existingAcc.setEmail(updateAcc.getEmail());
+						existingAcc.setMobileNum(updateAcc.getMobileNum());
+						existingAcc.setPassword(updateAcc.getPassword());
+						System.out.println("\nAccount " + updateAcc.getUserID() + " updated.\n");
 						break;
 					}
 				}
 			}
 		}
 
-		if (empty == true) {
+		if (empty == true)
+		{
 			System.out.println("\nPlease fill in all account details.\n");
 		}
-		// Error message when email or mobile already exist
-		else if (duplicate == true) {
-			System.out.println("\nEmail or mobile number already exists. Admin account not updated.\n");
+				
+		else if(!validName)
+		{
+			System.out.println("\nName can only be 45 characters long.");
 		}
-
-		// If no duplicate exist
-		else {
-			acc.setName(name);
-			acc.setEmail(email);
-			acc.setMobileNum(mobileNum);
-			acc.setPassword(password);
-			System.out.println("\nAccount " + acc.getUserID() + " updated.\n");
+				
+		else if(!validEmail)
+		{
+			System.out.println("\nEmail can only be 45 characters and end with @gmail.com.\n");
+		}
+				
+		else if(!validMobile)
+		{
+			System.out.println("\nMobile number consists of 8 digits.\n");
+		}
+				
+		else if(duplicate)
+		{
+			System.out.println("\nDuplicate information exist.\n");
 		}
 	}
-	
-
-
-
-	
-	
-	
-	
 	
 	//JianQi
 	// ========Maintain account input========
@@ -969,7 +1013,7 @@ public class TuitionManagement
 				validEmail = Pattern.matches(Email_Pattern, acc.getEmail());
 				validMobile = String.valueOf(acc.getMobileNum()).matches(Mobile_Pattern);
 				
-				if(validUserID && validName && validEmail && validMobile)
+				if(validUserID && validName && validEmail && validMobile && empty == false)
 				{
 					for(int i = 0; i < accountList.size(); i++)
 					{
@@ -1066,23 +1110,23 @@ public class TuitionManagement
 				{
 					validAdmin = true;
 					
-				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
-							|| existingMobile == updateAcc.getMobileNum()) 
+					if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
+								|| existingMobile == updateAcc.getMobileNum()) 
+						{
+							duplicate = true;
+							break;
+						}	
+		
+					// If no duplicate exist
+					if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
 					{
-						duplicate = true;
-						break;
-					}	
-	
-				// If no duplicate exist
-				if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
-				{
-						existingAcc.setName(updateAcc.getName());
-						existingAcc.setEmail(updateAcc.getEmail());
-						existingAcc.setMobileNum(updateAcc.getMobileNum());
-						existingAcc.setPassword(updateAcc.getPassword());
-						System.out.println("\nAdministrator account " + updateAcc.getUserID() + " updated.\n");
-						break;
-				}
+							existingAcc.setName(updateAcc.getName());
+							existingAcc.setEmail(updateAcc.getEmail());
+							existingAcc.setMobileNum(updateAcc.getMobileNum());
+							existingAcc.setPassword(updateAcc.getPassword());
+							System.out.println("\nAdministrator account " + updateAcc.getUserID() + " updated.\n");
+							break;
+					}
 				}
 			}
 			
@@ -1293,7 +1337,7 @@ public class TuitionManagement
 				int existingMobile = existingAcc.getMobileNum();
 				int existingID = existingAcc.getUserID();
 				
-				if(role.equalsIgnoreCase("Admin") && existingID == updateAcc.getUserID())
+				if(role.equalsIgnoreCase("Teacher") && existingID == updateAcc.getUserID())
 				{
 					validAdmin = true;
 					
@@ -1356,11 +1400,9 @@ public class TuitionManagement
 
 	//JianQi
 	// ========Administrator Option 2: Maintain teacher account (Delete)========
-	public static void deleteTeacher(ArrayList<Account> accountList) {
+	public static void deleteTeacher(ArrayList<Account> accountList, int userID) {
 		// Check if account exist
 		boolean teacherAccFound = false;
-
-		int userID = Helper.readInt("Enter teacher user id for delete > ");
 
 		for (int i = 0; i < accountList.size(); i++) {
 			Account teacherAcc = accountList.get(i);
