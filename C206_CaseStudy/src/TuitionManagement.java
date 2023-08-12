@@ -692,7 +692,7 @@ public class TuitionManagement
 	public static void studentMenu() {
 		TuitionManagement.setHeader("Student Menu");
 		System.out.println("1. View personal information");
-		System.out.println("2. Maintain enrollment");
+		System.out.println("2. View enrollment");
 		System.out.println("3. Return");
 		Helper.line(80, "-");
 	}
