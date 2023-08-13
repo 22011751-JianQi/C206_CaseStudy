@@ -1315,7 +1315,6 @@ public class TuitionManagement
 			
 			boolean duplicate = false;
 			boolean empty = false;
-			boolean validAdmin = false;
 			
 			// Check for empty fields
 			if (updateAcc.getName().isEmpty() 
@@ -1336,26 +1335,24 @@ public class TuitionManagement
 				int existingID = existingAcc.getUserID();
 				
 				if(role.equalsIgnoreCase("Teacher") && existingID == updateAcc.getUserID())
-				{
-					validAdmin = true;
-					
-				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
-							|| existingMobile == updateAcc.getMobileNum()) 
+				{	
+					if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
+								|| existingMobile == updateAcc.getMobileNum()) 
+						{
+							duplicate = true;
+							break;
+						}	
+		
+					// If no duplicate exist
+					if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
 					{
-						duplicate = true;
-						break;
-					}	
-	
-				// If no duplicate exist
-				if(validUserID && validName && validEmail && validMobile && duplicate == false && empty == false)
-				{
-						existingAcc.setName(updateAcc.getName());
-						existingAcc.setEmail(updateAcc.getEmail());
-						existingAcc.setMobileNum(updateAcc.getMobileNum());
-						existingAcc.setPassword(updateAcc.getPassword());
-						System.out.println("\nAdministrator account " + updateAcc.getUserID() + " updated.\n");
-						break;
-				}
+							existingAcc.setName(updateAcc.getName());
+							existingAcc.setEmail(updateAcc.getEmail());
+							existingAcc.setMobileNum(updateAcc.getMobileNum());
+							existingAcc.setPassword(updateAcc.getPassword());
+							System.out.println("\nAdministrator account " + updateAcc.getUserID() + " updated.\n");
+							break;
+					}
 				}
 			}
 			
@@ -1382,11 +1379,6 @@ public class TuitionManagement
 			else if(!validMobile)
 			{
 				System.out.println("\nMobile number consists of 8 digits.\n");
-			}
-			
-			else if(!validAdmin)
-			{
-				System.out.println("\nAccount " + updateAcc.getUserID() + " is not found.\n");
 			}
 					
 			else if(duplicate)
@@ -1539,7 +1531,6 @@ public class TuitionManagement
 			
 			boolean duplicate = false;
 			boolean empty = false;
-			boolean validAdmin = false;
 			
 			// Check for empty fields
 			if (updateAcc.getName().isEmpty() 
@@ -1560,7 +1551,6 @@ public class TuitionManagement
 				
 				if(role.equalsIgnoreCase("Student") && existingID == updateAcc.getUserID())
 				{
-					validAdmin = true;
 					
 				if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
 							|| existingMobile == updateAcc.getMobileNum()) 
@@ -1605,11 +1595,6 @@ public class TuitionManagement
 			else if(!validMobile)
 			{
 				System.out.println("\nMobile number consists of 8 digits.\n");
-			}
-			
-			else if(!validAdmin)
-			{
-				System.out.println("\nAccount " + updateAcc.getUserID() + " is not found.\n");
 			}
 					
 			else if(duplicate)
