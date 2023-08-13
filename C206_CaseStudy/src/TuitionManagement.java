@@ -954,6 +954,11 @@ public class TuitionManagement
 				updateAcc = new Account(newName, existingID, newPassword, newEmail, newMobileNum, "");
 				break;
 			}
+			else
+			{
+				System.out.println("\nAccount " + updateUserID + " is not found.\n");
+				break;
+			}
 		}	
 		return updateAcc;
 	}
@@ -1087,7 +1092,6 @@ public class TuitionManagement
 			
 			boolean duplicate = false;
 			boolean empty = false;
-			boolean validAdmin = false;
 			
 			// Check for empty fields
 			if (updateAcc.getName().isEmpty() 
@@ -1108,9 +1112,7 @@ public class TuitionManagement
 				int existingID = existingAcc.getUserID();
 				
 				if(role.equalsIgnoreCase("Admin") && existingID == updateAcc.getUserID())
-				{
-					validAdmin = true;
-					
+				{	
 					if (existingEmail.equalsIgnoreCase(updateAcc.getEmail())
 								|| existingMobile == updateAcc.getMobileNum()) 
 						{
@@ -1154,11 +1156,6 @@ public class TuitionManagement
 			else if(!validMobile)
 			{
 				System.out.println("\nMobile number consists of 8 digits.\n");
-			}
-			
-			else if(!validAdmin)
-			{
-				System.out.println("\nAccount " + updateAcc.getUserID() + " is not found.\n");
 			}
 					
 			else if(duplicate)

@@ -55,6 +55,9 @@ public class MaintainAdminTest
 	{
 		//Test add new valid Administrator account
 		TuitionManagement.addAdmin(accountList, admin3);
+		
+		//Size of list will be 1
+		// index 0 will be admin3
 		assertEquals("Check that Account arrayList size is 1", 1, accountList.size());
 		assertSame("Check that Admin account is added", admin3, accountList.get(0));
 		
@@ -62,11 +65,15 @@ public class MaintainAdminTest
 		//Test add duplicate Administrator account
 		Account duplicateAdmin = new Account("Admin3", 12097623, "password1", "Admin3@gmail.com", 12098765, "Admin");
 		TuitionManagement.addAdmin(accountList, duplicateAdmin);
+		
+		//Size remains at 1
 		assertEquals("Check that duplciate admin account is not added", 1, accountList.size());
 		
 		//Test invalid accounts
 		Account invalidAccount = new Account("Admin5", 120, "password1", "Admin5@gmail.com", 13456789, "Admin");
 		TuitionManagement.addAdmin(accountList, invalidAccount);
+		
+		//Size remains at 1
 		assertEquals("Check that invalid admin account is not added", 1, accountList.size());
 	}
 	
@@ -77,16 +84,22 @@ public class MaintainAdminTest
 		//Test delete valid account
 		TuitionManagement.addAdmin(accountList, admin4);
 		TuitionManagement.deleteAdmin(accountList, admin4.getUserID());
+		
+		// Size of list equals 0
 		assertEquals("Check that Account arrayList size is 0", 0, accountList.size());
 		
 		//Test delete invalid account user id
 		TuitionManagement.addAdmin(accountList, admin4);
 		TuitionManagement.deleteAdmin(accountList, 1234);
+		
+		// Size of list remains as 1
 		assertEquals("Check that admin3 account is not deleted and arrayList size is 1", 1, accountList.size());
 		
 		//Test delete valid account that is not an administrator
 		TuitionManagement.addTeacher(accountList, teacher3);
 		TuitionManagement.deleteAdmin(accountList, teacher3.getUserID());
+		
+		//Size of list remains as 1
 		assertEquals("Check that teacher3 is still in the list", teacher3.getUserID(), accountList.get(1).getUserID());
 	}
 	
@@ -101,7 +114,7 @@ public class MaintainAdminTest
 		assertEquals("Test that the retrieved accountList is empty", testOutput, allAdmin);
 		
 		// Test that added account is displayed
-		// testOutput will equals to all admin
+		// testOutput will equals to allAdmin
 		TuitionManagement.addAdmin(accountList, admin3);
 		TuitionManagement.addAdmin(accountList, admin4);
 		
