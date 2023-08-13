@@ -95,11 +95,13 @@ public class MaintainAdminTest
 	public void testViewAdministrator() 
 	{
 		// Test that output is empty when no administrator is added
+		// testOutput will equals to allAdmin which is empty
 		String allAdmin = TuitionManagement.retriveAllUsers(accountList);
 		String testOutput = "";
-		assertEquals("Test that the retrieved accountList is empty?", testOutput, allAdmin);
+		assertEquals("Test that the retrieved accountList is empty", testOutput, allAdmin);
 		
 		// Test that added account is displayed
+		// testOutput will equals to all admin
 		TuitionManagement.addAdmin(accountList, admin3);
 		TuitionManagement.addAdmin(accountList, admin4);
 		
@@ -107,11 +109,12 @@ public class MaintainAdminTest
 		testOutput = String.format("%-84s\n", accountList.get(0).toString());
 		testOutput += String.format("%-84s\n", accountList.get(1).toString());
 		
-		assertEquals("Test that the retrieved accountList is empty?", testOutput, allAdmin);
+		assertEquals("Test that the retrieved accountList is not empty", testOutput, allAdmin);
 		
-		// Test that only administrator is displayed
+		// Test that only administrator is displayed.
+		//if teacher can be retrieve, allAdmin will be more than testOutput.
 		TuitionManagement.addTeacher(accountList, teacher1);
-		assertEquals("Test that the retrieved accountList is empty?", testOutput, allAdmin);
+		assertEquals("Test that the retrieved accountList is empty", testOutput, allAdmin);
 	}
 	
 	//JianQi
