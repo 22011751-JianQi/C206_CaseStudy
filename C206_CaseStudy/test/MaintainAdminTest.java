@@ -138,24 +138,22 @@ public class MaintainAdminTest
 			TuitionManagement.addAdmin(accountList, admin3);
 			TuitionManagement.updateAdmin(accountList, new Account("newName", 12097623, "newpassword", "newEmail@gmail.com", 12345678, "Admin"));
 			
-			for(int i = 0; i < accountList.size(); i++)
-			{
-				if(accountList.get(i).getUserID() == 12097623 && accountList.get(i).getRole().equalsIgnoreCase("Admin"))
-				{
-					assertTrue("only administrator account admin3 has been udpated", admin3.getName().equals("newName"));
-				}
-			}
-		
+			//admin3 name is now newName
+			assertTrue("only administrator account admin3 has been udpated", admin3.getName().equals("newName"));
+				
 			//Test that the update function will not update an account that does not belong to admin
 			TuitionManagement.addTeacher(accountList, teacher2);
 			Account update = new Account ("newteach", 44444444, "password3", "Teacher3@gmail.com", 14234567, "Teacher"); 
 			TuitionManagement.updateAdmin(accountList, update);
 			
-			assertEquals("teacher1 name stays the same as Teacher1", teacher2.getName(), "Teacher2");
+			// teacher2 name remains as Teacher2
+			assertEquals("teacher2 name stays the same as Teacher2", teacher2.getName(), "Teacher2");
 		
 			// Test that administrator account cannot be updated if information does not meets a certain condition.
 			// mobile number less than 8
 			TuitionManagement.updateAdmin(accountList, new Account("newName2", 12097623, "newpassword2", "newEmail2@gmail.com", 123, "Admin"));
+			
+			// Mobile number remains the same
 			assertEquals("Administrator account remains unchanged", admin3.getMobileNum(), 12345678);
 	}
 	

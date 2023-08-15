@@ -932,7 +932,7 @@ public class TuitionManagement
 	}
 
 	//JianQi
-	//========update admin account input========
+	//========update account input========
 	public static Account inputUpdateAcc(ArrayList<Account> accountList)
 	{
 		int updateUserID = Helper.readInt("Enter user id to update account > ");
